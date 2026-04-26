@@ -22,3 +22,25 @@ export const EVENT_FLASH: Record<EventKind, string> = {
   Stasis:         'rgba(200, 200, 200, 0.6)',
   ModelStep:      'rgba(255, 255, 255, 0.0)',
 }
+
+// ── Nested Taiga identity ─────────────────────────────────────────────────────
+//
+// 12 accent colours distinct from the four model colours
+// (cyan, amber, violet, rose) and from each other.
+
+export const GREEK_LETTERS = ['α','β','γ','δ','ε','ζ','η','θ','ι','κ','λ','μ'] as const
+
+export const NESTED_ACCENTS = [
+  '#ffd700',  // α — gold
+  '#00ff99',  // β — mint green
+  '#ff6633',  // γ — coral orange
+  '#4488ff',  // δ — periwinkle blue
+  '#ff33cc',  // ε — magenta
+  '#33ffdd',  // ζ — aquamarine
+  '#ff9900',  // η — warm orange
+  '#88ff44',  // θ — chartreuse
+  '#9944ff',  // ι — blue-violet
+  '#ffbb88',  // κ — peach
+  '#22aaff',  // λ — dodger blue
+  '#eeff44',  // μ — bright yellow
+] as const

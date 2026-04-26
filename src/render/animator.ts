@@ -9,9 +9,14 @@ import {
   moveProbeBack,
   jumpProbe,
 } from '../probe.js'
+import {
+  type NestedTaigaState,
+  createNestedTaiga,
+  tickNestedTaiga,
+} from '../nested/nestedTaiga.js'
 import { layoutDAG, type LayoutMap } from './layout.js'
-import { EVENT_FLASH } from './palette.js'
-import { type FlashOverlay, type RenderState, renderFrame } from './renderer.js'
+import { EVENT_FLASH, NESTED_ACCENTS, GREEK_LETTERS } from './palette.js'
+import { type FlashOverlay, type Shockwave, type RenderState, renderFrame } from './renderer.js'
 
 export interface AnimatorOptions {
   config:          EcosystemConfig
@@ -36,23 +41,44 @@ export function createAnimator(opts: AnimatorOptions): Animator {
   let columns        = buildColumns(layout)
   let ecosystemState = initEcosystem(config)
   let probe          = refreshProbe(makeProbe(WIDE_J2_ENTRY), ecosystemState, nodes)
-  let history: EcosystemState[] = []   // snapshot stack for backward stepping
-  let flashes: FlashOverlay[] = []
+  let history: EcosystemState[]       = []
+  let flashes: FlashOverlay[]         = []
+  let nestedTaigas: NestedTaigaState[]= []
+  let shockwaves: Shockwave[]         = []
+  let edgeLuminosity                  = new Map<string, number>()
   let breathePhase = 0
-  let lastTickMs = 0
-  let isPaused   = true   // start paused — player steps manually
-  let rafId      = 0
-  let active     = false
+  let lastTickMs   = 0
+  let isPaused     = true
+  let rafId        = 0
+  let active       = false
 
   // ── Ecosystem step ─────────────────────────────────────────────────────────
 
   function stepEcosystem(): void {
     if (!ecosystemState.running) return
-    history.push(ecosystemState)        // snapshot before advancing
+    history.push(ecosystemState)
     ecosystemState = tickEcosystem(ecosystemState, config)
-
     probe = refreshProbe(probe, ecosystemState, nodes)
 
+    // Update edge luminosity — decay existing, light incoming frontier edges
+    const DECAY_PER_STEP = 1 / 3.5
+    for (const [k, v] of edgeLuminosity) {
+      const next = v - DECAY_PER_STEP
+      if (next <= 0) edgeLuminosity.delete(k)
+      else edgeLuminosity.set(k, next)
+    }
+    for (const m of ecosystemState.models.values()) {
+      if (!m.active) continue
+      for (const nodeId of m.frontier) {
+        const node = nodes[nodeId]
+        if (!node) continue
+        for (const predId of node.predecessors) {
+          edgeLuminosity.set(`${predId}-${nodeId}`, 1.0)
+        }
+      }
+    }
+
+    // Process events
     for (const ev of ecosystemState.events) {
       if (ev.step !== ecosystemState.step) continue
       const color = EVENT_FLASH[ev.kind as EventKind] ?? 'rgba(255,255,255,0.8)'
@@ -68,7 +94,26 @@ export function createAnimator(opts: AnimatorOptions): Animator {
         nodeIds = model ? [...model.frontier] : []
       }
       if (nodeIds.length > 0) flashes.push({ nodeIds, color, ttl: 14, maxTtl: 14 })
+
+      // ModuleBirth → spawn nested Taiga + shockwave
+      if (ev.kind === 'ModuleBirth' && nestedTaigas.length < GREEK_LETTERS.length) {
+        const idx    = nestedTaigas.length
+        const accent = NESTED_ACCENTS[idx]!
+        const letter = GREEK_LETTERS[idx]!
+        const model  = ecosystemState.models.get(ev.modelId)
+        const spawnPos = avgFrontierPos(model?.frontier ?? [], layout, canvas)
+        nestedTaigas.push(createNestedTaiga(
+          idx, ecosystemState.step, model?.frontier[0] ?? 0,
+          spawnPos.x, spawnPos.y, accent, letter,
+        ))
+        // Shockwave expands to cover the canvas diagonal in ~60 frames
+        const maxR = Math.hypot(canvas.width, canvas.height)
+        shockwaves.push({ x: spawnPos.x, y: spawnPos.y, radius: 0, maxRadius: maxR, color: accent, ttl: 60, maxTtl: 60 })
+      }
     }
+
+    // Tick all living nested sims
+    nestedTaigas = nestedTaigas.map(tickNestedTaiga)
   }
 
   // ── Lateral (←/→) navigation via layout columns ───────────────────────────
@@ -102,8 +147,11 @@ export function createAnimator(opts: AnimatorOptions): Animator {
         const prev = history.pop()
         if (prev) {
           ecosystemState = prev
-          isPaused       = true          // pause on step-back so player can look
-          flashes        = []            // clear mid-flight overlays
+          isPaused       = true
+          flashes        = []
+          shockwaves     = []
+          // Remove nested Taigas born after the restored step
+          nestedTaigas   = nestedTaigas.filter(t => t.birthParentStep <= ecosystemState.step)
           probe          = refreshProbe(probe, ecosystemState, nodes)
         }
         break
@@ -161,22 +209,41 @@ export function createAnimator(opts: AnimatorOptions): Animator {
   function loop(now: DOMHighResTimeStamp): void {
     if (!active) return
 
-    if (!isPaused && ecosystemState.running) {
+    const anySimRunning = ecosystemState.running || nestedTaigas.some(t => t.simState.running)
+
+    if (!isPaused && anySimRunning) {
       if (lastTickMs === 0 || now - lastTickMs >= tickIntervalMs) {
-        stepEcosystem()
+        if (ecosystemState.running) {
+          stepEcosystem()
+        } else {
+          // Parent done — keep ticking nested sims on their own
+          nestedTaigas = nestedTaigas.map(tickNestedTaiga)
+        }
         lastTickMs = now
       }
     }
 
-    flashes = flashes.map(f => ({ ...f, ttl: f.ttl - 1 })).filter(f => f.ttl > 0)
-
-    // Advance breathing phase (rate ∝ substrate density)
     if (!isPaused) {
+      // Per-frame: shockwave expansion
+      shockwaves = shockwaves
+        .map(s => ({ ...s, radius: s.radius + s.maxRadius / 60, ttl: s.ttl - 1 }))
+        .filter(s => s.ttl > 0)
+
+      // Per-frame: dodecagon drift + rotation + birth animation
+      const parentDone = !ecosystemState.running
+      nestedTaigas = nestedTaigas.map(t => updateDodecagonFrame(t, parentDone, canvas.width, canvas.height))
+
+      // Breathing phase
       const rhoApprox = ecosystemState.substrate.records.length / ecosystemState.substrate.C
       breathePhase += 0.022 + rhoApprox * 0.058
     }
 
-    const rs: RenderState = { ecosystemState, nodes, layout, flashes, probe, isPaused, breathePhase }
+    flashes = flashes.map(f => ({ ...f, ttl: f.ttl - 1 })).filter(f => f.ttl > 0)
+
+    const rs: RenderState = {
+      ecosystemState, nodes, layout, flashes, probe, isPaused,
+      breathePhase, nestedTaigas, edgeLuminosity, shockwaves,
+    }
     renderFrame(ctx, rs)
 
     rafId = requestAnimationFrame(loop)
@@ -189,6 +256,9 @@ export function createAnimator(opts: AnimatorOptions): Animator {
     probe          = refreshProbe(makeProbe(WIDE_J2_ENTRY), ecosystemState, nodes)
     history        = []
     flashes        = []
+    nestedTaigas   = []
+    shockwaves     = []
+    edgeLuminosity.clear()
     breathePhase   = 0
     isPaused       = true
     lastTickMs     = 0
@@ -246,4 +316,75 @@ function nearestY(col: number[], layout: LayoutMap, targetY: number): number {
     if (dist < bestDist) { bestDist = dist; bestId = id }
   }
   return bestId
+}
+
+// ── Nested Taiga helpers ──────────────────────────────────────────────────────
+
+/** Average pixel position of a set of frontier nodes. */
+function avgFrontierPos(
+  frontier: number[],
+  layout:   LayoutMap,
+  canvas:   HTMLCanvasElement,
+): { x: number; y: number } {
+  if (frontier.length === 0) return { x: canvas.width / 2, y: canvas.height / 2 }
+  let sx = 0, sy = 0, n = 0
+  for (const id of frontier) {
+    const p = layout.get(id)
+    if (p) { sx += p.x; sy += p.y; n++ }
+  }
+  return n > 0 ? { x: sx / n, y: sy / n } : { x: canvas.width / 2, y: canvas.height / 2 }
+}
+
+const DODEC_MARGIN = 30   // px from canvas edges
+
+/** Per-frame visual update for one dodecagon: drift, rotation, birth anim. */
+function updateDodecagonFrame(
+  t:          NestedTaigaState,
+  parentDone: boolean,
+  cw:         number,
+  ch:         number,
+): NestedTaigaState {
+  // Birth crystallisation (~20 frames to reach 1.0)
+  const birthAnim = Math.min(1, t.birthAnim + 0.05)
+
+  // Inner rotation: base + density-proportional rate
+  const { simState } = t
+  const rho = simState.substrate.records.length / simState.substrate.C
+  const innerAngle = t.innerAngle + 0.008 + rho * 0.035
+
+  // Flash TTL decrement
+  const innerFlashTtl = Math.max(0, t.innerFlashTtl - 1)
+
+  // Drift
+  let { x, y, vx, vy } = t
+
+  if (!parentDone) {
+    // Directed: drift toward nursery slot in bottom-right
+    const targetX = cw * 0.80 + (t.idx % 4) * 34 - 51
+    const targetY = ch * 0.78 + Math.floor(t.idx / 4) * 34 - 17
+    const dx = targetX - x, dy = targetY - y
+    const dist = Math.sqrt(dx * dx + dy * dy)
+    if (dist > 4) {
+      vx += (dx / dist * 0.35 - vx) * 0.04
+      vy += (dy / dist * 0.35 - vy) * 0.04
+    } else {
+      vx *= 0.85; vy *= 0.85
+    }
+  } else {
+    // Free roil — gentle random walk
+    vx += (Math.random() - 0.5) * 0.12
+    vy += (Math.random() - 0.5) * 0.12
+    const spd = Math.sqrt(vx * vx + vy * vy)
+    if (spd > 0.9) { vx *= 0.9 / spd; vy *= 0.9 / spd }
+  }
+
+  x += vx; y += vy
+
+  // Bounce off canvas edges
+  if (x < DODEC_MARGIN)        { x = DODEC_MARGIN;        vx = Math.abs(vx) }
+  if (x > cw - DODEC_MARGIN)   { x = cw - DODEC_MARGIN;   vx = -Math.abs(vx) }
+  if (y < DODEC_MARGIN)        { y = DODEC_MARGIN;        vy = Math.abs(vy) }
+  if (y > ch - DODEC_MARGIN)   { y = ch - DODEC_MARGIN;   vy = -Math.abs(vy) }
+
+  return { ...t, x, y, vx, vy, birthAnim, innerAngle, innerFlashTtl }
 }

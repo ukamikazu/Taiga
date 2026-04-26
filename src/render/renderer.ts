@@ -1,7 +1,9 @@
 import type { DAGNode, EcosystemState } from '../types.js'
 import type { LayoutMap } from './layout.js'
 import type { ProbeState } from '../probe.js'
+import type { NestedTaigaState } from '../nested/nestedTaiga.js'
 import { MODEL_PALETTE, EVENT_FLASH } from './palette.js'
+import { nestedDensity } from '../nested/nestedTaiga.js'
 import { density } from '../engine/substrate.js'
 
 export interface FlashOverlay {
@@ -11,6 +13,16 @@ export interface FlashOverlay {
   maxTtl:  number
 }
 
+export interface Shockwave {
+  x:         number
+  y:         number
+  radius:    number
+  maxRadius: number
+  color:     string
+  ttl:       number
+  maxTtl:    number
+}
+
 export interface RenderState {
   ecosystemState: EcosystemState
   nodes:          DAGNode[]
@@ -18,7 +30,10 @@ export interface RenderState {
   flashes:        FlashOverlay[]
   probe:          ProbeState
   isPaused:       boolean
-  breathePhase:   number   // monotonically advancing sine phase for substrate pulse
+  breathePhase:   number                   // sine phase for substrate pulse
+  nestedTaigas:   NestedTaigaState[]
+  edgeLuminosity: Map<string, number>      // 'fromId-toId' → 0..1 brightness
+  shockwaves:     Shockwave[]
 }
 
 const R_NODE     = 5
@@ -73,7 +88,7 @@ export function renderFrame(
     for (const nid of m.frontier) frontierOf.set(nid, m.type)
   }
 
-  // ── Edges ────────────────────────────────────────────────────────────────────
+  // ── Edges — with record-flow luminosity ──────────────────────────────────────
   ctx.save()
   for (const node of nodes) {
     const from = layout.get(node.id)
@@ -81,9 +96,11 @@ export function renderFrame(
     for (const sid of node.successors) {
       const to = layout.get(sid)
       if (!to) continue
-      const lit = visitedBy.has(node.id) && visitedBy.has(sid)
-      ctx.strokeStyle = lit ? 'rgba(255,255,255,0.22)' : 'rgba(255,255,255,0.06)'
-      ctx.lineWidth   = lit ? 1.2 : 0.7
+      const lum  = rs.edgeLuminosity.get(`${node.id}-${sid}`) ?? 0
+      const lit  = visitedBy.has(node.id) && visitedBy.has(sid)
+      const base = lit ? 0.22 : 0.06
+      ctx.strokeStyle = `rgba(255,255,255,${Math.min(0.9, base + lum * 0.55).toFixed(3)})`
+      ctx.lineWidth   = lit ? 1.2 + lum * 1.2 : 0.7
       ctx.beginPath()
       ctx.moveTo(from.x, from.y)
       ctx.lineTo(to.x, to.y)
@@ -157,20 +174,126 @@ export function renderFrame(
     ctx.restore()
   }
 
+  // ── Shockwaves ───────────────────────────────────────────────────────────────
+  for (const sw of rs.shockwaves) {
+    const alpha = (sw.ttl / sw.maxTtl) * 0.55
+    ctx.save()
+    ctx.globalAlpha = alpha
+    ctx.strokeStyle = sw.color
+    ctx.lineWidth   = 2.5
+    ctx.beginPath()
+    ctx.arc(sw.x, sw.y, sw.radius, 0, Math.PI * 2)
+    ctx.stroke()
+    ctx.restore()
+  }
+
+  // ── Dodecagons (nested Taigas) ────────────────────────────────────────────────
+  for (const t of rs.nestedTaigas) drawDodecagon(ctx, t)
+
   // ── Probe ────────────────────────────────────────────────────────────────────
-  drawProbe(ctx, probe, layout, width)
+  drawProbe(ctx, probe, layout, width, rs.nestedTaigas)
 
   // ── Global HUD ───────────────────────────────────────────────────────────────
   drawHUD(ctx, es, isPaused, height)
 }
 
+// ── Dodecagon (nested Taiga) rendering ───────────────────────────────────────
+
+const DODEC_R    = 24   // outer dodecagon radius
+const DODEC_SIDES = 12
+
+function dodecagonPath(ctx: CanvasRenderingContext2D, cx: number, cy: number, r: number): void {
+  ctx.beginPath()
+  for (let i = 0; i <= DODEC_SIDES; i++) {
+    const angle = (i / DODEC_SIDES) * Math.PI * 2 - Math.PI / 2
+    const x = cx + r * Math.cos(angle)
+    const y = cy + r * Math.sin(angle)
+    if (i === 0) ctx.moveTo(x, y)
+    else ctx.lineTo(x, y)
+  }
+}
+
+function drawDodecagon(ctx: CanvasRenderingContext2D, t: NestedTaigaState): void {
+  const eased = easeOut(t.birthAnim)
+  const r     = DODEC_R * eased
+  if (r < 0.5) return
+
+  const { x, y, accent, innerAngle, innerFlashTtl, daughters } = t
+  const nd = nestedDensity(t)
+
+  ctx.save()
+
+  // Outer dodecagon stroke
+  ctx.strokeStyle = accent
+  ctx.lineWidth   = 1.5
+  ctx.globalAlpha = 0.82
+  dodecagonPath(ctx, x, y, r)
+  ctx.stroke()
+
+  // Dark interior fill
+  ctx.fillStyle = 'rgba(4,4,16,0.72)'
+  dodecagonPath(ctx, x, y, r)
+  ctx.fill()
+
+  // Inner rotating triangle — rate ∝ internal ρ
+  const innerR = r * 0.44
+  ctx.save()
+  ctx.translate(x, y)
+  ctx.rotate(innerAngle)
+  ctx.strokeStyle = accent
+  ctx.lineWidth   = 1
+  ctx.globalAlpha = innerFlashTtl > 0
+    ? 0.9
+    : 0.38 + nd * 0.45
+  if (innerFlashTtl > 0) {
+    ctx.fillStyle = accent
+    ctx.globalAlpha = (innerFlashTtl / 25) * 0.35
+    ctx.beginPath()
+    for (let i = 0; i <= 3; i++) {
+      const a = (i / 3) * Math.PI * 2 - Math.PI / 2
+      if (i === 0) ctx.moveTo(innerR * Math.cos(a), innerR * Math.sin(a))
+      else ctx.lineTo(innerR * Math.cos(a), innerR * Math.sin(a))
+    }
+    ctx.fill()
+    ctx.globalAlpha = 0.9
+  }
+  ctx.beginPath()
+  for (let i = 0; i <= 3; i++) {
+    const a = (i / 3) * Math.PI * 2 - Math.PI / 2
+    if (i === 0) ctx.moveTo(innerR * Math.cos(a), innerR * Math.sin(a))
+    else ctx.lineTo(innerR * Math.cos(a), innerR * Math.sin(a))
+  }
+  ctx.stroke()
+  ctx.restore()
+
+  // Greek letter — centred
+  ctx.font        = `bold ${Math.round(r * 0.55)}px sans-serif`
+  ctx.fillStyle   = accent
+  ctx.globalAlpha = 0.92
+  ctx.textAlign   = 'center'
+  ctx.textBaseline = 'middle'
+  ctx.fillText(t.id, x, y + 1)
+
+  // Daughter count badge (bottom of dodecagon)
+  if (daughters.length > 0) {
+    ctx.font        = `bold 9px "Courier New", monospace`
+    ctx.globalAlpha = 0.65
+    ctx.fillText(`×${daughters.length}`, x, y + r + 10)
+  }
+
+  ctx.restore()
+}
+
+function easeOut(t: number): number { return 1 - (1 - t) * (1 - t) }
+
 // ── Probe rendering ───────────────────────────────────────────────────────────
 
 function drawProbe(
-  ctx:     CanvasRenderingContext2D,
-  probe:   ProbeState,
-  layout:  LayoutMap,
-  canvasW: number,
+  ctx:          CanvasRenderingContext2D,
+  probe:        ProbeState,
+  layout:       LayoutMap,
+  canvasW:      number,
+  nestedTaigas: NestedTaigaState[],
 ): void {
   const pos = layout.get(probe.nodeId)
   if (!pos) return
@@ -191,17 +314,18 @@ function drawProbe(
   // Sense panel — flip side based on canvas position
   const panelW = 194
   const panelX = pos.x > canvasW / 2 ? pos.x - panelW - 20 : pos.x + 20
-  drawSensePanel(ctx, probe, panelX, pos.y - 10)
+  drawSensePanel(ctx, probe, panelX, pos.y - 10, nestedTaigas)
 }
 
 const PANEL_LINE = 17
 const PANEL_PAD  = 10
 
 function drawSensePanel(
-  ctx:   CanvasRenderingContext2D,
-  probe: ProbeState,
-  px:    number,
-  py:    number,
+  ctx:          CanvasRenderingContext2D,
+  probe:        ProbeState,
+  px:           number,
+  py:           number,
+  nestedTaigas: NestedTaigaState[],
 ): void {
   const { sense } = probe
   type Line = { text: string; color: string }
@@ -239,6 +363,20 @@ function drawSensePanel(
     for (const kind of sense.presentEvents) {
       const raw = EVENT_FLASH[kind] ?? 'rgba(255,255,255,0.9)'
       lines.push({ text: `⚡ ${kind}`, color: rgbaToSolid(raw) })
+    }
+  }
+
+  // Nested Taigas whose birth node is at or adjacent to probe
+  const nearbyTaigas = nestedTaigas.filter(
+    t => t.birthNodeId === probe.nodeId || probe.predecessors.includes(t.birthNodeId) || probe.successors.includes(t.birthNodeId)
+  )
+  if (nearbyTaigas.length > 0) {
+    lines.push({ text: '', color: '' })
+    for (const t of nearbyTaigas) {
+      const nd  = nestedDensity(t)
+      const dgr = t.daughters.length > 0 ? t.daughters.map(d => d.id).join(' ') : '—'
+      lines.push({ text: `[${t.id}] n=${t.simState.step}  ρ=${nd.toFixed(2)}`, color: t.accent })
+      lines.push({ text: `   daughters: ${dgr}`, color: t.accent })
     }
   }
 
