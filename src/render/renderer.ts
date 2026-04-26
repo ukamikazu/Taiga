@@ -18,6 +18,7 @@ export interface RenderState {
   flashes:        FlashOverlay[]
   probe:          ProbeState
   isPaused:       boolean
+  breathePhase:   number   // monotonically advancing sine phase for substrate pulse
 }
 
 const R_NODE     = 5
@@ -31,20 +32,36 @@ export function renderFrame(
   const { ecosystemState: es, nodes, layout, flashes, probe, isPaused } = rs
   const { width, height } = ctx.canvas
 
-  // Background — brightens with global substrate density
-  ctx.fillStyle = '#08080f'
+  // ── Background temperature — ρ drives colour continuously ───────────────────
+  //
+  // Cold (ρ=0): deep blue-black — universe empty, unconstrained.
+  // Rising (ρ→0.5): deep violet, indigo — universe getting heavier.
+  // Warm (ρ→1): amber darkness — full, compressed, about to end.
+
+  const rho = density(es.substrate)
+
+  ctx.fillStyle = bgColorFromRho(rho)
   ctx.fillRect(0, 0, width, height)
 
-  const d = density(es.substrate)
-  if (d > 0.01) {
-    const intensity = Math.min(d * 0.5, 0.28)
+  // Ambient radial glow, temperature-matched
+  if (rho > 0.01) {
+    const glowIntensity = Math.min(rho * 0.55, 0.30)
+    const [gr, gg, gb] = glowRgbFromRho(rho)
     const grad = ctx.createRadialGradient(
       width / 2, height / 2, 0,
       width / 2, height / 2, Math.min(width, height) * 0.65,
     )
-    grad.addColorStop(0, `rgba(30, 30, 80, ${intensity})`)
+    grad.addColorStop(0, `rgba(${gr},${gg},${gb},${glowIntensity})`)
     grad.addColorStop(1, 'transparent')
     ctx.fillStyle = grad
+    ctx.fillRect(0, 0, width, height)
+  }
+
+  // Substrate breathing — emerges above ρ=0.6, rate ∝ ρ
+  if (rho > 0.6) {
+    const depth = Math.min((rho - 0.6) / 0.4, 1) * 0.08
+    const pulse = (Math.sin(rs.breathePhase) + 1) * 0.5
+    ctx.fillStyle = `rgba(200,140,40,${(depth * pulse).toFixed(3)})`
     ctx.fillRect(0, 0, width, height)
   }
 
@@ -261,6 +278,41 @@ function drawSensePanel(
 function rgbaToSolid(rgba: string): string {
   const m = rgba.match(/rgba\(\s*(\d+),\s*(\d+),\s*(\d+)/)
   return m ? `rgb(${m[1]},${m[2]},${m[3]})` : rgba
+}
+
+// ── Background temperature helpers ────────────────────────────────────────────
+
+function bgColorFromRho(rho: number): string {
+  // Multi-stop RGB interpolation: cold blue-black → deep violet → indigo → amber darkness
+  type Stop = [number, [number, number, number]]
+  const stops: Stop[] = [
+    [0.00, [6,   6,  18]],
+    [0.35, [10,  7,  24]],
+    [0.65, [14,  8,  20]],
+    [0.85, [18,  9,  12]],
+    [1.00, [26,  12,  4]],
+  ]
+  for (let i = 0; i < stops.length - 1; i++) {
+    const [t0, c0] = stops[i]!
+    const [t1, c1] = stops[i + 1]!
+    if (rho <= t1) {
+      const t = (rho - t0) / (t1 - t0)
+      const r = Math.round(c0[0] + (c1[0] - c0[0]) * t)
+      const g = Math.round(c0[1] + (c1[1] - c0[1]) * t)
+      const b = Math.round(c0[2] + (c1[2] - c0[2]) * t)
+      return `rgb(${r},${g},${b})`
+    }
+  }
+  return 'rgb(26,12,4)'
+}
+
+function glowRgbFromRho(rho: number): [number, number, number] {
+  // Cold glow: cool blue [20,20,80] → Warm glow: amber [80,40,10]
+  return [
+    Math.round(20 + rho * 60),
+    Math.round(20 + rho * 20),
+    Math.round(80 - rho * 70),
+  ]
 }
 
 // ── Global HUD ────────────────────────────────────────────────────────────────

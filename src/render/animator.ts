@@ -38,6 +38,7 @@ export function createAnimator(opts: AnimatorOptions): Animator {
   let probe          = refreshProbe(makeProbe(WIDE_J2_ENTRY), ecosystemState, nodes)
   let history: EcosystemState[] = []   // snapshot stack for backward stepping
   let flashes: FlashOverlay[] = []
+  let breathePhase = 0
   let lastTickMs = 0
   let isPaused   = true   // start paused — player steps manually
   let rafId      = 0
@@ -169,7 +170,13 @@ export function createAnimator(opts: AnimatorOptions): Animator {
 
     flashes = flashes.map(f => ({ ...f, ttl: f.ttl - 1 })).filter(f => f.ttl > 0)
 
-    const rs: RenderState = { ecosystemState, nodes, layout, flashes, probe, isPaused }
+    // Advance breathing phase (rate ∝ substrate density)
+    if (!isPaused) {
+      const rhoApprox = ecosystemState.substrate.records.length / ecosystemState.substrate.C
+      breathePhase += 0.022 + rhoApprox * 0.058
+    }
+
+    const rs: RenderState = { ecosystemState, nodes, layout, flashes, probe, isPaused, breathePhase }
     renderFrame(ctx, rs)
 
     rafId = requestAnimationFrame(loop)
@@ -182,6 +189,7 @@ export function createAnimator(opts: AnimatorOptions): Animator {
     probe          = refreshProbe(makeProbe(WIDE_J2_ENTRY), ecosystemState, nodes)
     history        = []
     flashes        = []
+    breathePhase   = 0
     isPaused       = true
     lastTickMs     = 0
   }
