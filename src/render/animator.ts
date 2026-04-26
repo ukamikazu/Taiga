@@ -1,4 +1,4 @@
-import type { EcosystemConfig, EventKind } from '../types.js'
+import type { EcosystemConfig, EcosystemState, EventKind } from '../types.js'
 import { buildDAG } from '../engine/dag.js'
 import { WIDE_J2_ENTRY } from '../engine/dag.js'
 import { initEcosystem, tickEcosystem } from '../ecosystem.js'
@@ -36,6 +36,7 @@ export function createAnimator(opts: AnimatorOptions): Animator {
   let columns        = buildColumns(layout)
   let ecosystemState = initEcosystem(config)
   let probe          = refreshProbe(makeProbe(WIDE_J2_ENTRY), ecosystemState, nodes)
+  let history: EcosystemState[] = []   // snapshot stack for backward stepping
   let flashes: FlashOverlay[] = []
   let lastTickMs = 0
   let isPaused   = true   // start paused — player steps manually
@@ -46,6 +47,7 @@ export function createAnimator(opts: AnimatorOptions): Animator {
 
   function stepEcosystem(): void {
     if (!ecosystemState.running) return
+    history.push(ecosystemState)        // snapshot before advancing
     ecosystemState = tickEcosystem(ecosystemState, config)
 
     probe = refreshProbe(probe, ecosystemState, nodes)
@@ -92,6 +94,17 @@ export function createAnimator(opts: AnimatorOptions): Animator {
       case ' ': {
         e.preventDefault()
         stepEcosystem()
+        break
+      }
+      case 'Tab': {
+        e.preventDefault()
+        const prev = history.pop()
+        if (prev) {
+          ecosystemState = prev
+          isPaused       = true          // pause on step-back so player can look
+          flashes        = []            // clear mid-flight overlays
+          probe          = refreshProbe(probe, ecosystemState, nodes)
+        }
         break
       }
       case 'p':
@@ -167,6 +180,7 @@ export function createAnimator(opts: AnimatorOptions): Animator {
   function reset(): void {
     ecosystemState = initEcosystem(config)
     probe          = refreshProbe(makeProbe(WIDE_J2_ENTRY), ecosystemState, nodes)
+    history        = []
     flashes        = []
     isPaused       = true
     lastTickMs     = 0

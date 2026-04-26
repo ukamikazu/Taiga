@@ -318,7 +318,7 @@ function drawHUD(
   ctx.font        = 'bold 11px "Courier New", monospace'
   ctx.globalAlpha = 0.42
   ctx.fillStyle   = '#ffffff'
-  ctx.fillText('SPC step  P play/pause  ↑↓ probe  ←→ cluster  R restart', x, canvasH - 14)
+  ctx.fillText('SPC step  TAB step back  P play/pause  ↑↓ probe  ←→ cluster  R restart', x, canvasH - 14)
 
   ctx.restore()
 }
