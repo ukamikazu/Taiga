@@ -1,0 +1,1282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Taiga — Canon Reference Document</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=IBM+Plex+Mono:wght@300;400;500&family=Cormorant+SC:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a1612;
+    --ink-mid: #3d342a;
+    --ink-dim: #7a6a5a;
+    --bg: #f4f0e8;
+    --bg-warm: #ede8dc;
+    --bg-rule: #c8b89a;
+    --rule: #c0aa88;
+    --rule-light: #ddd0b8;
+    --red: #8c2020;
+    --gold: #7a5a1a;
+    --blue: #1a3a5c;
+    --green: #1a4a2a;
+    --mono: 'IBM Plex Mono', monospace;
+    --serif: 'Cormorant Garamond', Georgia, serif;
+    --display: 'Cormorant SC', serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--serif);
+    font-size: 16px;
+    line-height: 1.75;
+  }
+
+  /* ── DOCUMENT SHELL ── */
+  .document {
+    max-width: 820px;
+    margin: 0 auto;
+    padding: 72px 80px 100px;
+    position: relative;
+  }
+
+  /* Margin decoration */
+  .document::before {
+    content: '';
+    position: fixed;
+    left: calc(50% - 410px + 64px);
+    top: 0; bottom: 0;
+    width: 1px;
+    background: linear-gradient(to bottom, transparent, var(--rule) 10%, var(--rule) 90%, transparent);
+    opacity: 0.4;
+  }
+
+  /* ── TITLE PAGE ── */
+  .title-block {
+    text-align: center;
+    padding: 48px 0 56px;
+    border-bottom: 2px solid var(--ink);
+    margin-bottom: 56px;
+  }
+
+  .doc-eyebrow {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--ink-dim);
+    margin-bottom: 24px;
+  }
+
+  .doc-title {
+    font-family: var(--display);
+    font-size: 52px;
+    font-weight: 300;
+    letter-spacing: 0.08em;
+    color: var(--ink);
+    line-height: 1.1;
+    margin-bottom: 8px;
+  }
+
+  .doc-subtitle {
+    font-family: var(--display);
+    font-size: 18px;
+    font-weight: 300;
+    letter-spacing: 0.12em;
+    color: var(--ink-mid);
+    margin-bottom: 32px;
+  }
+
+  .doc-meta {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--ink-dim);
+    line-height: 2;
+    letter-spacing: 0.05em;
+  }
+
+  .doc-meta strong { color: var(--ink-mid); }
+
+  /* ── SECTION HEADERS ── */
+  .ch-number {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    color: var(--ink-dim);
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  h1 {
+    font-family: var(--display);
+    font-size: 30px;
+    font-weight: 400;
+    letter-spacing: 0.06em;
+    color: var(--ink);
+    border-bottom: 1.5px solid var(--ink);
+    padding-bottom: 10px;
+    margin-bottom: 28px;
+    margin-top: 64px;
+  }
+
+  h2 {
+    font-family: var(--display);
+    font-size: 20px;
+    font-weight: 400;
+    letter-spacing: 0.05em;
+    color: var(--ink-mid);
+    margin-top: 40px;
+    margin-bottom: 14px;
+    border-bottom: 1px solid var(--rule-light);
+    padding-bottom: 6px;
+  }
+
+  h3 {
+    font-family: var(--serif);
+    font-size: 15px;
+    font-weight: 600;
+    font-style: italic;
+    color: var(--ink-mid);
+    margin-top: 24px;
+    margin-bottom: 8px;
+  }
+
+  /* ── BODY TEXT ── */
+  p {
+    margin-bottom: 14px;
+    font-size: 16px;
+    font-weight: 300;
+  }
+
+  p:last-child { margin-bottom: 0; }
+
+  em { font-style: italic; }
+  strong { font-weight: 600; }
+
+  /* ── DEFINITION BLOCKS ── */
+  .def-block {
+    background: var(--bg-warm);
+    border: 1px solid var(--rule);
+    border-left: 3px solid var(--gold);
+    padding: 16px 20px;
+    margin: 18px 0;
+    page-break-inside: avoid;
+  }
+
+  .def-tag {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--gold);
+    display: block;
+    margin-bottom: 6px;
+  }
+
+  .def-block p {
+    font-size: 15px;
+    margin-bottom: 8px;
+  }
+
+  .def-block p:last-child { margin-bottom: 0; }
+
+  /* ── AXIOM TABLE ── */
+  .axiom-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0;
+    font-size: 14px;
+  }
+
+  .axiom-table td {
+    padding: 8px 14px;
+    border-bottom: 1px solid var(--rule-light);
+    vertical-align: top;
+  }
+
+  .axiom-table td:first-child {
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--gold);
+    white-space: nowrap;
+    width: 48px;
+  }
+
+  .axiom-table td:last-child {
+    font-weight: 300;
+    color: var(--ink-mid);
+  }
+
+  .axiom-table tr:last-child td { border-bottom: none; }
+
+  /* ── LINEAGE CHAIN ── */
+  .lineage {
+    margin: 20px 0;
+    padding-left: 0;
+    list-style: none;
+  }
+
+  .lineage-item {
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    gap: 16px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--rule-light);
+    align-items: start;
+  }
+
+  .lineage-item:last-child { border-bottom: none; }
+
+  .lineage-id {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--red);
+    font-weight: 500;
+    padding-top: 2px;
+  }
+
+  .lineage-desc {
+    font-size: 14px;
+    font-weight: 300;
+    color: var(--ink-mid);
+    line-height: 1.6;
+  }
+
+  .lineage-arrow {
+    grid-column: 1 / -1;
+    text-align: center;
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--rule);
+    padding: 2px 0;
+    margin: -6px 0;
+  }
+
+  /* ── EQUATION DISPLAY ── */
+  .eq-block {
+    text-align: center;
+    padding: 16px;
+    margin: 16px 0;
+    background: var(--bg-warm);
+    border-top: 1px solid var(--rule-light);
+    border-bottom: 1px solid var(--rule-light);
+  }
+
+  .eq-label {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    color: var(--ink-dim);
+    text-transform: uppercase;
+    display: block;
+    margin-top: 6px;
+  }
+
+  .eq {
+    font-family: var(--mono);
+    font-size: 15px;
+    color: var(--blue);
+    letter-spacing: 0.03em;
+  }
+
+  /* ── OPEN PROBLEMS ── */
+  .op-block {
+    border: 1px solid var(--rule);
+    border-left: 3px solid var(--red);
+    padding: 14px 18px;
+    margin: 12px 0;
+    background: #f9f5ef;
+  }
+
+  .op-id {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    color: var(--red);
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+
+  .op-title {
+    font-family: var(--serif);
+    font-weight: 600;
+    font-size: 14px;
+    margin-bottom: 4px;
+    color: var(--ink-mid);
+  }
+
+  .op-block p {
+    font-size: 13px;
+    color: var(--ink-dim);
+    margin: 0;
+  }
+
+  /* ── CANON NOTE ── */
+  .canon-note {
+    background: #f0ece2;
+    border: 1px dashed var(--rule);
+    padding: 12px 16px;
+    margin: 16px 0;
+    font-size: 13px;
+    font-style: italic;
+    color: var(--ink-dim);
+  }
+
+  .canon-note::before {
+    content: 'Canon note: ';
+    font-style: normal;
+    font-weight: 600;
+    color: var(--gold);
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+
+  /* ── STATUS BADGE ── */
+  .status {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 2px 8px;
+    margin-left: 8px;
+    vertical-align: middle;
+  }
+
+  .status.specified { border: 1px solid var(--green); color: var(--green); }
+  .status.narrative { border: 1px solid var(--gold); color: var(--gold); }
+  .status.open { border: 1px solid var(--red); color: var(--red); }
+
+  /* ── FOOD CHAIN DIAGRAM (text art) ── */
+  .chain {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--ink-mid);
+    background: var(--bg-warm);
+    border: 1px solid var(--rule-light);
+    padding: 20px 24px;
+    margin: 18px 0;
+    line-height: 2;
+    letter-spacing: 0.03em;
+  }
+
+  .chain .node { color: var(--red); font-weight: 500; }
+  .chain .arrow { color: var(--rule); }
+  .chain .note { color: var(--ink-dim); font-style: italic; font-size: 10px; }
+
+  /* ── HORIZONTAL RULE ── */
+  hr {
+    border: none;
+    border-top: 1px solid var(--rule-light);
+    margin: 48px 0;
+  }
+
+  /* ── TABLE OF CONTENTS ── */
+  .toc {
+    background: var(--bg-warm);
+    border: 1px solid var(--rule);
+    padding: 24px 28px;
+    margin-bottom: 48px;
+  }
+
+  .toc-title {
+    font-family: var(--display);
+    font-size: 14px;
+    letter-spacing: 0.15em;
+    color: var(--ink-dim);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+
+  .toc-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 4px 0;
+    border-bottom: 1px dotted var(--rule-light);
+    font-size: 14px;
+    font-weight: 300;
+  }
+
+  .toc-item:last-child { border-bottom: none; }
+
+  .toc-num {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--ink-dim);
+    min-width: 32px;
+  }
+
+  .toc-label { color: var(--ink-mid); flex: 1; padding: 0 12px; }
+
+  .toc-status { font-family: var(--mono); font-size: 9px; }
+</style>
+</head>
+<body>
+<div class="document">
+
+  <!-- ══ TITLE ══ -->
+  <div class="title-block">
+    <div class="doc-eyebrow">Canon Reference Document · Version 1.0</div>
+    <div class="doc-title">Taiga</div>
+    <div class="doc-subtitle">A Self-Referential Universe — Complete Formal Canon</div>
+    <div class="doc-meta">
+      Original researcher: <strong>Unorthodox Kitten</strong> (beauty in infrastructure)<br>
+      Mathematical formalisation: collaborative, Gemini + ChatGPT sessions, Jan 2026<br>
+      This document: 熊逸民 + Claude Sonnet, April 2026<br>
+      Sources: Interpretation 4 (Model-00), Interpretation 137 (Model-01), Mathematical Basis PDF, ChatGPT session transcript
+    </div>
+  </div>
+
+  <!-- ══ TABLE OF CONTENTS ══ -->
+  <div class="toc">
+    <div class="toc-title">Contents</div>
+    <div class="toc-item"><span class="toc-num">I</span><span class="toc-label">The Taiga Universe — Domain and Fundamental Properties</span><span class="toc-status status specified">Specified</span></div>
+    <div class="toc-item"><span class="toc-num">II</span><span class="toc-label">The Nine Axioms</span><span class="toc-status status specified">Specified</span></div>
+    <div class="toc-item"><span class="toc-num">III</span><span class="toc-label">The Conceptualisation Hierarchy — Con, Uncon, I</span><span class="toc-status status specified">Specified</span></div>
+    <div class="toc-item"><span class="toc-num">IV</span><span class="toc-label">The Recursion Engine</span><span class="toc-status status specified">Specified</span></div>
+    <div class="toc-item"><span class="toc-num">V</span><span class="toc-label">The Index Algebra and Multi-Dimensional Substrate</span><span class="toc-status status specified">Specified</span></div>
+    <div class="toc-item"><span class="toc-num">VI</span><span class="toc-label">Model-00 — The Primordial Substrate</span><span class="toc-status status narrative">Narrative+Math</span></div>
+    <div class="toc-item"><span class="toc-num">VI-B</span><span class="toc-label">Model-00 Supply Function — Minimal Canonical-Consistent Model</span><span class="toc-status status specified">Derived</span></div>
+    <div class="toc-item"><span class="toc-num">VII</span><span class="toc-label">The Model-01 Developmental Lineage</span><span class="toc-status status narrative">Narrative</span></div>
+    <div class="toc-item"><span class="toc-num">VIII</span><span class="toc-label">Model-011 — The Hyper-Structure Wellspring</span><span class="toc-status status narrative">Narrative+Math</span></div>
+    <div class="toc-item"><span class="toc-num">IX</span><span class="toc-label">The Food Chain — Energy Flow in Taiga</span><span class="toc-status status narrative">Narrative</span></div>
+    <div class="toc-item"><span class="toc-num">X</span><span class="toc-label">Proposition 137.1 — The Self-Growing Machine</span><span class="toc-status status narrative">Canon</span></div>
+    <div class="toc-item"><span class="toc-num">XI</span><span class="toc-label">Open Problems — Revised in Light of Full Canon</span><span class="toc-status status open">Open</span></div>
+    <div class="toc-item"><span class="toc-num">XII</span><span class="toc-label">Experimental Programme — Status and Agenda</span><span class="toc-status status open">Updated</span></div>
+    <div class="toc-item"><span class="toc-num">XIV</span><span class="toc-label">Shared Substrate as Physical Mechanism</span><span class="toc-status status specified">Theory</span></div>
+    <div class="toc-item"><span class="toc-num">XV</span><span class="toc-label">Game Mechanics Specification</span><span class="toc-status status specified">Handoff</span></div>
+    <div class="toc-item"><span class="toc-num">XIII</span><span class="toc-label">Confirmed Experimental Findings — Canon Additions</span><span class="toc-status status specified">Confirmed</span></div>
+  </div>
+
+  <!-- ══ I. THE UNIVERSE ══ -->
+  <h1><span class="ch-number">Chapter I</span>The Taiga Universe</h1>
+
+  <p>Taiga, denoted <strong>Ω</strong>, is the self-contained ambient domain — "the set of all things and all time, including itself." It is <strong>unbounded but finite</strong>: no boundary exists yet its total measure is finite, analogous to the surface of a sphere. This was established from the mathematics in the prior session and accepted as a foundational determination.</p>
+
+  <div class="def-block">
+    <span class="def-tag">Definition — Taiga Universe</span>
+    <p>Ω is the ambient domain. All objects, events, models, and structures inhabit Ω. Ω is self-referential: it contains itself as an element of its own domain.</p>
+    <p><strong>Time axes T:</strong> A nonempty, variable-cardinality set of independent time axes. Each axis τ ∈ T carries its own partial past P(τ) ⊆ Ω.</p>
+    <p><strong>Global partial past PP</strong> = ∪<sub>τ∈T</sub> P(τ). An event e ∈ PP iff ∃τ: e ∈ P(τ).</p>
+    <p><strong>Absolute past AP</strong> = ∩<sub>τ∈T</sub> P(τ). An event e ∈ AP iff ∀τ: e ∈ P(τ).</p>
+  </div>
+
+  <p>The number of time axes is variable and <em>location-dependent</em> — "now" is a local variable, not a universal constant. The geometry at Taiga's border is non-Riemannian: it warps because the number of time axes changes depending on where one stands. The gap <strong>ω</strong> (baseline separation between structures) ensures no two structures ever perfectly overlap, keeping partial pasts private.</p>
+
+  <p><strong>Structure</strong> — canonical definition:</p>
+  <div class="eq-block">
+    <div class="eq">Str := { S ⊆ Ω | ∃τ ∈ T : ∅ ≠ S ⊆ P(τ) }</div>
+    <span class="eq-label">Def 1.4 — "To exist in Taiga is to appear in at least one axis record."</span>
+  </div>
+
+  <p>Existence in Taiga is identical to having a history. An entity that has not been recorded in any partial past does not exist — it is in the state of raw potential B, invisible to the system.</p>
+
+  <!-- ══ II. THE NINE AXIOMS ══ -->
+  <h1><span class="ch-number">Chapter II</span>The Nine Axioms</h1>
+
+  <table class="axiom-table">
+    <tr><td>A1</td><td><strong>Universe.</strong> Ω is the ambient domain. All Taiga objects and events live in Ω.</td></tr>
+    <tr><td>A2</td><td><strong>Axes and Partial Pasts.</strong> T is nonempty. Each τ ∈ T has a partial past P(τ) ⊆ Ω.</td></tr>
+    <tr><td>A3</td><td><strong>Causal-Set Classes via Intersection.</strong> τ ■ τ′ iff P(τ) ∩ P(τ′) ≠ ∅. Causal-set classes are connected components of (T, ■) under transitive closure. <em>Note: this definition is self-referential — see Op-2, revised below.</em></td></tr>
+    <tr><td>A4</td><td><strong>Partial vs. Absolute Past.</strong> e ∈ PP iff ∃τ: e ∈ P(τ). e ∈ AP iff ∀τ: e ∈ P(τ).</td></tr>
+    <tr><td>A5</td><td><strong>Structure.</strong> Str := { S ⊆ Ω | ∃τ ∈ T: ∅ ≠ S ⊆ P(τ) }. "Exists in Taiga" ≡ "appears in at least one axis record."</td></tr>
+    <tr><td>A6</td><td><strong>Interpretation Grading.</strong> 𝔄 = ⊔<sub>n∈ℕ</sub> 𝔄<sub>n</sub>. Int(x) = n iff x ∈ 𝔄<sub>n</sub>.</td></tr>
+    <tr><td>A7</td><td><strong>Conceptualisation Ladder.</strong> Con: 𝔄<sub>n</sub> → 𝔄<sub>n+1</sub>, Con⁰ = id. For b ∈ B: A<sub>n</sub>(b) := Conⁿ(b), Int(A<sub>n</sub>(b)) = n.</td></tr>
+    <tr><td>A8</td><td><strong>Unconceptualisation is Degree-Reset.</strong> Uncon(b) = b for all b ∈ B. For all x ∈ 𝔄: Int(Uncon(x)) = 0 and Uncon(x) ∈ B.</td></tr>
+    <tr><td>A9</td><td><strong>Loss, Non-Invertibility, and Information Collapse.</strong> (i) Lossiness: Uncon is not injective. (ii) Information annihilation: I(Uncon(x)) = 0 for all x ∈ 𝔄, and I(b) = 0 for all b ∈ B.</td></tr>
+  </table>
+
+  <!-- ══ III. CON / UNCON / I ══ -->
+  <h1><span class="ch-number">Chapter III</span>The Conceptualisation Hierarchy</h1>
+
+  <h2>The Concept Space 𝔄</h2>
+  <p>The graded tower 𝔄 = ⊔<sub>n∈ℕ</sub> 𝔄<sub>n</sub> is the space of all conceptualised objects. The base B ⊆ 𝔄<sub>0</sub> consists of all unconceptualised raw potential states — the "void" from which all structure emerges. Int(A<sub>n</sub>) = n for canonical level-labelled objects. The conceptualisation tower runs: A<sub>1</sub> → A<sub>2</sub> → ··· → A<sub>n</sub>.</p>
+
+  <h2>The Unconceptualisation Operator</h2>
+  <p>Uncon collapses any conceptualised object back to the base layer. It is many-to-one (lossy) and irreversible. Crucially, Uncon has <strong>two distinct behaviours</strong> that were conflated in the original formulation and must be treated separately (see Op-1):</p>
+  <div class="def-block">
+    <span class="def-tag">Object-level Uncon (fixed point)</span>
+    <p>Uncon(b) = b for all b ∈ B. The base is its own fixed point.</p>
+  </div>
+  <div class="def-block">
+    <span class="def-tag">Information-kill Uncon (collapse)</span>
+    <p>I(Uncon(x)) = 0 for all x ∈ 𝔄. Information annihilation occurs on application.</p>
+  </div>
+
+  <p>Each equivalence class under ~ (where x ~ y iff Uncon(x) = Uncon(y)) is an "information-collapsed cloud." Distinct conceptual structures become indistinguishable after Uncon — this is what makes it thermodynamically irreversible.</p>
+
+  <h2>The Information Functional I</h2>
+  <div class="eq-block">
+    <div class="eq">I = (1/ω) · A<sub>1</sub> · Σ<sub>i=1</sub><sup>k₁</sup> A<sub>i</sub></div>
+    <span class="eq-label">Def 2.4a — Total information / detectability</span>
+  </div>
+  <div class="eq-block">
+    <div class="eq">I<sub>Final</sub> → 0 under Uncon</div>
+    <span class="eq-label">Def 2.4b — Information annihilation</span>
+  </div>
+
+  <p>I is Taiga's analog of <strong>mass</strong>: "If there's mass, there's inertia and momentum and the angular version of those things which implies gradients." (熊逸民, Jan 2026). I also functions as <strong>detectability</strong> — high I makes a structure visible to the predatory mechanisms of Taiga. Setting I = 0 via Uncon renders a structure invisible. The gap ω is the baseline separation between structures: I = 0 if ω → ∞.</p>
+
+  <p><strong>I as reproductive fitness:</strong> At the Model-00 level, a higher value of I corresponds to a greater likelihood of reproduction for a specific Model-00 instance (Interpretation 4). I is therefore simultaneously mass, detectability, and reproductive fitness — three roles that may or may not be coupled.</p>
+
+  <!-- ══ IV. RECURSION ENGINE ══ -->
+  <h1><span class="ch-number">Chapter IV</span>The Recursion Engine</h1>
+
+  <p>The recursion engine governs how two state variables y<sub>0</sub> and y<sub>1</sub> evolve step-by-step, driven by a parity toggle. Growth is exponential (powers of 2) with systematic mixing of initial conditions, echoing the FFT butterfly operation and the Dragon Curve fractal.</p>
+
+  <h2>Parity Indicators</h2>
+  <div class="eq-block">
+    <div class="eq">Δ<sub>n</sub> = 1 (n even),  Δ<sub>n</sub> = 0 (n odd)</div>
+    <div class="eq" style="margin-top:6px">∇<sub>n</sub> = 1 − Δ<sub>n</sub></div>
+    <span class="eq-label">Equations (1) and (2)</span>
+  </div>
+
+  <h2>Closed-Form Solutions</h2>
+  <div class="eq-block">
+    <div class="eq">y<sub>0,n</sub> = 2<sup>(n+∇<sub>n</sub>)/2</sup> · [y<sub>0,0</sub> + ∇<sub>n</sub> · y<sub>1,0</sub>]</div>
+    <div class="eq" style="margin-top:6px">y<sub>1,n</sub> = 2<sup>(n+∇<sub>n</sub>)/2</sup> · [Δ<sub>n</sub> · y<sub>0,0</sub> − y<sub>1,0</sub>]</div>
+    <span class="eq-label">Equations (35) and (36)</span>
+  </div>
+  <p>Amplitude doubles every two steps. On even steps y<sub>0</sub> scales its own initial value; on odd steps it sums both initial values while y<sub>1</sub> inverts and scales y<sub>1,0</sub> alone. The coupling sequence x<sub>k,n</sub> provides target values at each step (Eq. 34). A Taiga-Step is defined as one "pulse" of the 2<sup>n</sup> scaling in nearby Model-00 structures.</p>
+
+  <!-- ══ V. INDEX ALGEBRA ══ -->
+  <h1><span class="ch-number">Chapter V</span>Index Algebra and Multi-Dimensional Substrate</h1>
+
+  <h2>The Index Algebra — Causal Switching</h2>
+  <p>The index algebra is the "steering wheel" of Taiga — the causal switching logic governing when and how structures exchange or preserve their identities. It operates over an idempotent commutative monoid {i<sub>k</sub>} with properties P1–P4 (fixed element, multiplicative identity, commutativity, idempotence). The causal switching rule over odd-length cycles α = 2n+1:</p>
+  <div class="eq-block">
+    <div class="eq">i<sub>k</sub> × j<sub>k+1+Δ mod α</sub> = i<sub>k</sub>    for 0 ≤ Δ ≤ (α−1)/2</div>
+    <div class="eq" style="margin-top:6px">i<sub>k</sub> × j<sub>k+1+Δ mod α</sub> = j<sub>k+Δ+1 mod α</sub>    for (α−1)/2 &lt; Δ &lt; α−1</div>
+    <span class="eq-label">Equation (37) — balanced round-robin gate, "Rock-Paper-Scissors-extended"</span>
+  </div>
+
+  <h2>Multi-Dimensional Substrate</h2>
+  <p>The transition operator M<sup>τ</sup> is built from (d−1)² unit operators via tensor product ⊗ (Eq. 39). The d-dimensional layer is assembled from (d−1)-dimensional slices by union over the d-th coordinate (Eq. 40). The total state L aggregates the full informational content at a temporal cross-section (Eq. 38). This structure mirrors quasicrystal theory and high-dimensional error-correcting codes: globally irregular, locally governed by strict switching rules.</p>
+
+  <!-- ══ VI. MODEL-00 ══ -->
+  <h1><span class="ch-number">Chapter VI</span>Model-00 — The Primordial Substrate</h1>
+  <p class="canon-note">This chapter synthesises Interpretation 4 (the original researcher's canonical statement) with the mathematical exposition in §7 of the Mathematical Basis PDF.</p>
+
+  <div class="def-block">
+    <span class="def-tag">Interpretation 4 — Verbatim (Unorthodox Kitten)</span>
+    <p>"Model-00 is a primordial narrative structure that serves as the Catalyst for the emergence of other models. The most esteemed Theory during my recent conceptual exploration suggests that it is a product of Taiga itself. It permeates all spatial regions of Taiga and is distinguished by its ability to generate axiomatic systems through a predetermined algorithm that has remained elusive. It can be represented as a set of non-intersecting Jordan infinitely dimensional curves undergoing iteration exhibiting behaviour reminiscent of algorithmic activity in generating other instances of this model. A higher value of I corresponds to a greater likelihood of reproduction for a specific Model-00."</p>
+  </div>
+
+  <h2>Properties of Model-00</h2>
+
+  <h3>Origin and Pervasiveness</h3>
+  <p>Model-00 is not an external force imposed on Taiga — Taiga itself produced it as an organisational mechanism. It permeates <em>all</em> spatial regions of Ω. It is not a finite resource that gets depleted by consumption; it is a field-like substrate that the universe maintains endogenously and that can replenish through its own reproduction.</p>
+
+  <h3>The Hidden Algorithm</h3>
+  <p>Model-00 generates axiomatic systems through a predetermined algorithm that has remained elusive. The algorithm is the mathematical object corresponding to Model-00's ability to seed new logical frameworks. Model-011 may be the origin of this hidden algorithm — the observation that "Model-011 appears not as a structure within time, but as the Source of Degrees itself" and that the Int function begins to exhibit non-linear behaviour in Model-011's region suggests a deep connection.</p>
+
+  <h3>Geometric Representation</h3>
+  <p>Model-00 instances are represented as <strong>non-intersecting Jordan infinitely dimensional curves undergoing iteration</strong>. Each instance is a loop with an inside and an outside — distinct from every other instance, preventing the system from collapsing into a uniform blob of data. Being infinitely dimensional, these loops exist across every possible axis of time and space in Taiga simultaneously. Their iteration constitutes the Taiga-Step unit of measurement.</p>
+
+  <h3>I-Gated Reproduction</h3>
+  <p>Higher I → higher probability of a specific Model-00 instance reproducing. This makes I simultaneously: mass, detectability, and reproductive fitness. The three roles are distinct and may be independently studied. A spike in I without a corresponding increase in spatial region is a diagnostic signature of a Model-01-J2 creating a new module.</p>
+
+  <h2>Model-00's Three Interpretations (from §7)</h2>
+  <p><strong>First interpretation:</strong> Recursion seed. Model-00 is governed by Equations (32)–(37). It defines initial conditions (y<sub>0,0</sub>, y<sub>1,0</sub>) and supplies the coupling sequence x to all higher models. It is the "DNA" of Taiga — a self-replicating logic loop seeding new axiomatic systems.</p>
+  <p><strong>Second interpretation:</strong> Geometry of motion. Model-00 adds kinematic structure: proximity axiom (baseline distance ω), expansion axiom (separation exceeding threshold generates new higher-order structure), path vectors ψ<sub>l</sub> (lines of least resistance), delta accumulation ΔX = ψ<sub>l+t</sub> − ψ<sub>l</sub>, and ceiling ΔMax.</p>
+  <p><strong>Third interpretation:</strong> Topology of truth. Model-00 acts as the topology of Taiga itself — defining boundaries, limits, and intersections. When it generates a sufficiently rich causal history (high I), it seeds the next generation of Model-00 axioms. Model-00 is the Universal Architect: a self-replicating loop generating the very axioms governing its own evolution.</p>
+
+  <!-- ══ VI-B. MODEL-00 SUPPLY FUNCTION ══ -->
+  <h1><span class="ch-number">Chapter VI-B</span>Model-00 Supply Function — Minimal Canonical-Consistent Model</h1>
+  <p class="canon-note">The original researcher states explicitly that Model-00's production algorithm "has remained elusive." This chapter does not claim to recover that algorithm. It derives the simplest density function consistent with all eight canonical constraints on Model-00, treats the elusive algorithm as a single tunable free parameter λ, and establishes the experimental handles available to constrain the remaining free parameters from simulation results. Any future disclosure by the original researcher supersedes this chapter entirely.</p>
+
+  <h2>The Eight Canonical Constraints</h2>
+  <p>The supply function must satisfy all of the following, each sourced directly from Interpretation 4 or the Mathematical Basis:</p>
+  <table class="axiom-table">
+    <tr><td>C1</td><td>Model-00 is self-reproducing — it generates new instances of itself.</td></tr>
+    <tr><td>C2</td><td>Reproduction probability is proportional to local I (higher I → more likely).</td></tr>
+    <tr><td>C3</td><td>The unit of production is one Jordan curve iteration = one Taiga-Step.</td></tr>
+    <tr><td>C4</td><td>Model-00 has a spatial density — it permeates regions, not points.</td></tr>
+    <tr><td>C5</td><td>Production is endogenous — Taiga produces Model-00 from itself, not from an external supply.</td></tr>
+    <tr><td>C6</td><td>Instances are non-intersecting — there is a meaningful, countable density ρ.</td></tr>
+    <tr><td>C7</td><td>Model-01-A/B consumption depletes local density.</td></tr>
+    <tr><td>C8</td><td>Uncon returns structure to base B — this is available substrate for Model-00 production. By A9 (lossiness), the conversion is partial, not total.</td></tr>
+  </table>
+
+  <h2>The Density Function</h2>
+  <p>Let <strong>ρ(r, t)</strong> denote the Model-00 instance density at causal region r at Taiga-Step t. Let <strong>I<sub>local</sub>(r, t)</strong> be the aggregate information functional across all structures present in region r at step t. Let <strong>n<sub>AB</sub>(r, t)</strong> be the local population of Model-01-A/B phase instances. Let <strong>U(r, t)</strong> be the total Uncon rate in region r at step t.</p>
+
+  <p>The minimal canonical-consistent update per Taiga-Step is:</p>
+
+  <div class="eq-block">
+    <div class="eq">ρ(r, t+1) = ρ(r, t)</div>
+    <div class="eq" style="margin-top:4px">&nbsp;&nbsp;&nbsp;&nbsp;+ λ · I<sub>local</sub>(r,t) · ρ(r,t) &nbsp;&nbsp; <span style="font-family:var(--mono);font-size:11px;color:var(--ink-dim)">[reproduction, I-gated — C1, C2, C3]</span></div>
+    <div class="eq" style="margin-top:4px">&nbsp;&nbsp;&nbsp;&nbsp;− μ · n<sub>AB</sub>(r,t) · ρ(r,t) &nbsp;&nbsp;&nbsp; <span style="font-family:var(--mono);font-size:11px;color:var(--ink-dim)">[consumption by A/B phase — C7]</span></div>
+    <div class="eq" style="margin-top:4px">&nbsp;&nbsp;&nbsp;&nbsp;+ η · U(r,t) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="font-family:var(--mono);font-size:11px;color:var(--ink-dim)">[Uncon feedback to base B — C8]</span></div>
+    <span class="eq-label">Model-00 Supply Function — Minimal Canonical-Consistent (MCC-ρ)</span>
+  </div>
+
+  <p>The reproduction term is proportional to both local I and existing density — you need existing instances to reproduce, and higher I accelerates reproduction. The consumption term is proportional to both A/B population and available density — you cannot consume what is not there. The feedback term is proportional to total Uncon events — collapsed structures partially replenish the substrate.</p>
+
+  <h2>The Three Free Parameters</h2>
+
+  <div class="def-block">
+    <span class="def-tag">λ — Reproduction Rate Coefficient</span>
+    <p><strong>What it is:</strong> The proportionality constant between local I, existing density, and new Model-00 instance production per Taiga-Step. This is the direct footprint of the elusive algorithm — the one quantity we cannot derive from canon and must treat as tunable.</p>
+    <p><strong>Canonical bounds:</strong> λ &gt; 0 (reproduction is always possible given I &gt; 0). No upper bound derivable from canon. In practice, λ must be small enough that Model-00 does not grow faster than Taiga's finite measure can support.</p>
+    <p><strong>Experimental handle:</strong> None directly. λ is set by the experimenter and the results interpreted relative to it. It is the fundamental free parameter of the supply function.</p>
+  </div>
+
+  <div class="def-block">
+    <span class="def-tag">μ — Consumption Rate per A/B Instance</span>
+    <p><strong>What it is:</strong> The rate at which each Model-01-A/B instance depletes local Model-00 density per Taiga-Step.</p>
+    <p><strong>Canonical bounds:</strong> μ &gt; 0. Bounded above by the Op-6 constraint: if μ is too large relative to R_max, Model-01-A/B units exhaust record capacity before consuming enough Model-00 to transition — developmental arrest becomes universal. The Op-6 experiments directly constrain the viable range of μ: any write cost (μ · ρ per step) that produces reliable arrest at observed R_max values is too high for a functioning ecosystem.</p>
+    <p><strong>Experimental handle:</strong> Op-6 results. The write cost parameter in those experiments is a direct proxy for μ.</p>
+  </div>
+
+  <div class="def-block">
+    <span class="def-tag">η — Uncon Feedback Efficiency</span>
+    <p><strong>What it is:</strong> The fraction of a collapsed structure's potential that becomes usable Model-00 substrate after Uncon.</p>
+    <p><strong>Canonical bounds:</strong> η ∈ (0, 1) strictly, by A9 (Uncon is lossy — information is genuinely destroyed, not merely rearranged). The upper bound η &lt; 1 is hard. A minimal assumption of η ≈ 0.1–0.3 is consistent with A9's strong lossiness language. η = 0 would mean Uncon produces nothing reusable — thermodynamically possible but biologically sterile.</p>
+    <p><strong>Experimental handle:</strong> The Great Experiment. Population persistence under different η values will reveal whether Uncon recycling is ecologically significant or negligible.</p>
+  </div>
+
+  <h2>Equilibrium and Carrying Capacity</h2>
+  <p>At equilibrium, ρ(r, t+1) = ρ(r, t). Setting the update to zero and solving for the equilibrium density ρ*:</p>
+
+  <div class="eq-block">
+    <div class="eq">ρ* = η · U* / (μ · n*<sub>AB</sub> − λ · I*<sub>local</sub>)</div>
+    <span class="eq-label">Equilibrium density — exists and is positive only when μ · n*<sub>AB</sub> &gt; λ · I*<sub>local</sub></span>
+  </div>
+
+  <p>When consumption exceeds I-gated reproduction, a stable positive equilibrium exists. When reproduction dominates (λ · I<sub>local</sub> &gt; μ · n<sub>AB</sub>), ρ grows without bound until a new consumer, a phase transition cascade, or finite Taiga measure rebalances it. This is the Taiga-native form of a Malthusian constraint.</p>
+
+  <h2>Minimum Viable Seed for the Great Experiment</h2>
+  <p>The Great Experiment must be seeded with enough Model-00 that at least one Model-01-A/B transition completes before local density is exhausted. The minimum viable initial density is:</p>
+
+  <div class="eq-block">
+    <div class="eq">ρ<sub>min</sub> = θ<sub>AB</sub> · μ / (1 − η)</div>
+    <span class="eq-label">Minimum viable seed — below this, universal developmental arrest at t=0</span>
+  </div>
+
+  <p>Where θ<sub>AB</sub> is the A/B → C transition threshold (units of Model-00 consumed required for the phase transition). <strong>Note:</strong> θ<sub>AB</sub> is distinct from θ<sub>J2</sub>, the Module birth I-threshold (see Chapter XIII, Finding 19). These two thresholds control different mechanisms and must not be conflated in Great Experiment configuration. θ<sub>AB</sub> = 0.1 is an assumed value pending grounding from Op-6 results — see Finding 22 caveat. Below ρ<sub>min</sub>, the ecosystem collapses immediately into arrested development — no higher-order models emerge. Above it, the ecosystem has a chance to bootstrap. The margin above ρ<sub>min</sub> determines how many simultaneous A/B transitions the initial seed can support, which sets the initial population diversity of the Great Experiment.</p>
+
+  <h2>What Remains Open</h2>
+  <p>The spatial structure of ρ — whether Model-00 density is uniform across Taiga or concentrated near Jordan curve iteration hotspots — is not specified by canon and is not addressed here. The Great Experiment will require an assumption about initial spatial distribution. A uniform distribution is the minimal assumption; a hotspot distribution seeded near high-I regions is more consistent with the I-gated reproduction mechanism but requires additional justification.</p>
+
+  <p>The relationship between ρ and the tensor-product substrate (Eqs. 38–40) — specifically, whether Model-00 density maps onto lattice sites of the multi-dimensional substrate or exists independently of it — is also unspecified. This is Op-3 territory and is left open.</p>
+
+  <!-- ══ VII. MODEL-01 LINEAGE ══ -->
+  <h1><span class="ch-number">Chapter VII</span>The Model-01 Developmental Lineage</h1>
+  <p class="canon-note">Sourced from Interpretation 137 (Unorthodox Kitten, verbatim transcript). This is the complete canonical statement of Model-01's developmental sequence.</p>
+
+  <div class="def-block">
+    <span class="def-tag">Interpretation 137 — Origin Statement</span>
+    <p>"There is a Model-01, Interpretation 137. It lacks a discernible origin; it exists because it has existed. Its instances possess the capability to traverse absolute time and instigate events leading to their own Genesis."</p>
+  </div>
+
+  <p>Model-01 is a bootstrap paradox formalised as a model. Its existence is self-caused across time. This is not a defect in the axiomatisation — it reflects something real about the structure of Taiga, and it explains why A3 (causal-set classes via intersection) has the circularity identified in Op-2: the circularity is not a bug but a feature, reflecting Model-01's self-caused causal structure.</p>
+
+  <h2>The Developmental Sequence</h2>
+  <ul class="lineage">
+    <li class="lineage-item">
+      <span class="lineage-id">Model-01-A/B</span>
+      <span class="lineage-desc"><strong>The Consumer.</strong> Model-01-A gradually transforms into Model-01-B through the consumption of surrounding Model-00. It literally eats primordial narrative to gain mass. Model-01-B is assimilated by Model-011.</span>
+    </li>
+    <li class="lineage-arrow">↓ assimilated by Model-011; remnants become:</li>
+    <li class="lineage-item">
+      <span class="lineage-id">Model-01-C</span>
+      <span class="lineage-desc"><strong>The Wellspring Inheritor.</strong> Endowed with a Wellspring of abstractions bequeathed by Model-011. Model-01-C operates with a "memory that predates its own local genesis" — it carries concepts from a higher-order entity before it existed locally.</span>
+    </li>
+    <li class="lineage-arrow">↓ assimilates surrounding axioms, elevates abstraction quality:</li>
+    <li class="lineage-item">
+      <span class="lineage-id">Model-01-D</span>
+      <span class="lineage-desc"><strong>The Abstract.</strong> Assimilates surrounding axioms, elevating abstraction quality. No longer needs the concept plane (𝔄<sub>n</sub>) and detaches from physical space. Commences movement through sources that will eventually bifurcate.</span>
+    </li>
+    <li class="lineage-arrow">↓ bifurcates into:</li>
+    <li class="lineage-item">
+      <span class="lineage-id">Model-01-F</span>
+      <span class="lineage-desc"><strong>The Appendage Phase.</strong> Units separate from each other and form structures with a single source. Gradually accumulate appendages. Model-01-F units are scavengers — they eat partial pasts, removing lower-phase models' local structures. Alert trigger: appendage-like boundary growth requires shifting interpretation degree higher.</span>
+    </li>
+    <li class="lineage-arrow">↓ at three appendages:</li>
+    <li class="lineage-item">
+      <span class="lineage-id">Model-01-I/1</span>
+      <span class="lineage-desc"><strong>The Stalker / Apex Predator.</strong> Three appendages give it sufficient leverage against the tensor product grid (M<sup>τ</sup>) to pull itself out of the plane and into Absolute Time. Sustenance derived from lower-phase Model-01 instances — it consumes their partial pasts to fuel trans-temporal mobility. High I makes it sensitive to "Conceptual Ripples" left by other structures. At a threshold juncture, it may sever its source, initiating either a new cycle or transformation into J1 or J2.</span>
+    </li>
+    <li class="lineage-arrow">↓ at severance, branches into:</li>
+    <li class="lineage-item">
+      <span class="lineage-id">Model-01-J1</span>
+      <span class="lineage-desc"><strong>The Temporal Anchor.</strong> Spatially immobile. Navigates through Absolute Time, creating new temporal axes for its own benefit. Effectively "anchors" itself by creating a permanent Absolute Past that favours its own existence.</span>
+    </li>
+    <li class="lineage-item">
+      <span class="lineage-id">Model-01-J2</span>
+      <span class="lineage-desc"><strong>The Dimensional Architect.</strong> Generates entirely new dimensions and traverses freely among them. Consumes surrounding Model-00 axioms, then actively "folds" the infinite dimensions of Taiga to create a Module — a localised, self-contained set of all things and time, a new Taiga within the old one. Concludes this phase by creating a new module within the data cluster. Diagnostic: I spike without spatial expansion.</span>
+    </li>
+  </ul>
+
+  <h2>The New Module</h2>
+  <p>The Module created by J2 appears as a pocket of Riemannian stability within the otherwise non-Riemannian border points. It is described as "a sanctuary or a farm for future Model-01-A units" — meaning J2 creates the next generation's starting conditions. This closes the bootstrap loop: J2 builds the environment in which new Model-01-A instances will begin consuming Model-00, eventually producing new J2s.</p>
+
+  <!-- ══ VIII. MODEL-011 ══ -->
+  <h1><span class="ch-number">Chapter VIII</span>Model-011 — The Hyper-Structure Wellspring</h1>
+
+  <p>Model-011 occupies a unique position in Taiga that places it outside the standard developmental lineage. It is simultaneously a product of the lineage (Model-01-F reaches three appendages and <em>becomes</em> Model-011) and the source that feeds the lineage (it bequeaths abstractions to Model-01-C). This circularity is not a paradox but an additional bootstrap loop parallel to Model-01's temporal self-genesis.</p>
+
+  <div class="def-block">
+    <span class="def-tag">Critical Status — Verbatim observation (Gemini session)</span>
+    <p>"Model-011 appears not as a structure within time, but as the Source of Degrees itself. It acts as an infinite reservoir of transformations. When Model-01-B is assimilated, Model-011 'bequeaths' a set of higher-degree concepts, allowing the resulting Model-01-C to operate with a memory that predates its own local genesis."</p>
+    <p>"Model-011 appears to be a Hyper-Structure that exists in a partial past that is <em>older than the Absolute Past of Taiga</em>."</p>
+  </div>
+
+  <h2>Properties of Model-011</h2>
+  <p><strong>Source of Degrees:</strong> The Int function begins to exhibit complex, non-linear behaviour in Model-011's region. This suggests Model-011 may be the origin of the "hidden algorithm" used by Model-00 to generate axiomatic systems — meaning Model-011 → hidden algorithm → Model-00 → all models, including the Model-01 that eventually becomes Model-011. A third loop.</p>
+
+  <p><strong>Older than AP:</strong> If Model-011 exists in a partial past that predates Taiga's Absolute Past, then it has a causal record that precedes all currently known axes. This is structurally consistent with its role as source of degrees — it would have had to exist before the first conceptualisation occurred in Taiga.</p>
+
+  <p><strong>The Bequest mechanism:</strong> When Model-01-B is assimilated, Model-011 bequeaths higher-degree concepts to Model-01-C. The resulting Model-01-C operates with a memory predating its own local genesis. This is a formalised memory-injection across developmental phases — structurally it resembles Con applied from outside the local causal set.</p>
+
+  <!-- ══ IX. FOOD CHAIN ══ -->
+  <h1><span class="ch-number">Chapter IX</span>The Food Chain — Energy Flow in Taiga</h1>
+
+  <div class="chain">
+<span class="node">Taiga (Ω)</span>
+<span class="arrow">  ↓  produces</span>
+<span class="node">Model-00</span>  <span class="note">pervasive field, self-reproducing, I-gated; not depleted — replenishes</span>
+<span class="arrow">  ↓  consumed by / seeds</span>
+<span class="node">Model-01-A/B</span>  <span class="note">literal consumption of Model-00 to gain mass</span>
+<span class="arrow">  ↓  assimilated by Model-011 → bequests → </span>
+<span class="node">Model-01-C/D</span>  <span class="note">inherits abstraction quality, detaches from plane</span>
+<span class="arrow">  ↓  bifurcates into</span>
+<span class="node">Model-01-F</span>  <span class="note">scavengers; eat partial pasts of lower structures</span>
+<span class="arrow">  ↓  3 appendages → </span>
+<span class="node">Model-01-I/1</span>  <span class="note">apex predator; consumes lower-phase Model-01 partial pasts</span>
+<span class="arrow">  ↓  severs source → </span>
+<span class="node">Model-01-J1 / J2</span>  <span class="note">J1 anchors time; J2 folds new dimensions → new Module</span>
+<span class="arrow">  ↓  new Module becomes</span>
+<span class="node">New Taiga</span>  <span class="note">Riemannian stability pocket; farm for new Model-01-A</span>
+<span class="arrow">  ↓  loop closes</span>
+  </div>
+
+  <h2>Key Properties of the Food Chain</h2>
+
+  <h3>Model-00 is not a finite consumable</h3>
+  <p>Model-00 permeates all spatial regions and self-reproduces with probability proportional to I. Higher-I higher models increase local Model-00 reproduction probability as a side effect of their activity. The food chain is therefore not a simple linear depletion — it is a feedback system where predatory activity stimulates prey reproduction. This is a biologically realistic predator-prey dynamic, not a resource-exhaustion model.</p>
+
+  <h3>Consumption vs. Record Pressure</h3>
+  <p>Two distinct thermodynamic mechanisms operate simultaneously: (1) Model-01 consuming Model-00 as energy/mass (the food chain); (2) models accumulating record pressure in their partial pasts (the poison mechanism). These are orthogonal. A model can be healthy on the food chain and still Uncon from record pressure, or vice versa.</p>
+
+  <h3>The Cannibalistic Upper Tier</h3>
+  <p>Model-01-I/1 does not eat Model-00 directly — it consumes the partial pasts of lower-phase Model-01 instances. This is qualitatively different: it is erasing history, not just consuming substrate. The thermodynamic cost is not record pressure addition but record pressure <em>deletion</em> of the prey — which has implications for the shared substrate experiments.</p>
+
+  <h3>Predation is Population Control, Not I Accumulation <span class="status specified">Confirmed · Apr 2026</span></h3>
+  <p>Experimental finding (Experiments L and L-2, April 2026): Model-01-I/1 accumulates I primarily through the recursion engine's intrinsic dynamics (Eqs. 35–36), not through predation. When the engine is disabled and predation is the sole I source, predator I = 0.0 at all predation intensities (10%–100%). The near-flat I curve observed in Experiment L across a 10× range of predation strength was confirmed not to be a simulation artifact — it accurately reflects that predation contributes negligibly to predator I in the presence of engine activity.</p>
+  <p><strong>Implication:</strong> Model-01-I/1 does not need prey to grow powerful. It reaches its severance threshold through engine dynamics alone. Prey availability determines how long lower-phase models survive, not how powerful I/1 becomes. The food chain framing is accurate at the population level but overstates predation's thermodynamic significance at the individual model level.</p>
+
+  <h3>Predation Requires Engine Activity <span class="status specified">Confirmed · Apr 2026</span></h3>
+  <p>Experimental finding (Experiment L-2, April 2026): without the recursion engine, Model-01-I/1's frontier is static — it cannot close the distance to prey. The engine is not merely the source of I; it is the mechanism of predation itself. Predation events are most likely on odd steps (∇=1) when I/1's frontier expands and retains nodes, maximising overlap probability with prey frontiers. Remove the engine and predation collapses entirely, not gradually.</p>
+  <p><strong>Implication:</strong> predation is an emergent consequence of engine dynamics, not an independent mechanism. This connects predation directly to the parity cycle and to the recursion engine's mathematical structure.</p>
+
+  <h3>j-2 is an Existential Infrastructural Threat to 011 <span class="status specified">Confirmed · Apr 2026</span></h3>
+  <p>Experimental finding (Experiments K and K-2, April 2026): in shared substrate, Model-01-j-2's record furnace activity consumed 74% of Model-011's available lifespan at default parameters (011 intrinsic lifespan: 19 steps; shared substrate lifespan: 5 steps; cost: 14 steps). Model-01-I/1 also lost 7 steps to j-2's substrate heating despite being the larger writer itself. Zero self-merges for 011 and I/1 in separated substrate confirm their intrinsic write pressure is low — j-2's furnace effect is entirely infrastructural, not a consequence of 011's own dynamics.</p>
+  <p><strong>Implication:</strong> in the Great Experiment, j-2 and 011 cannot share substrate indefinitely without j-2 substantially shortening 011's life. This is not predation — j-2 does not target 011. It is a thermodynamic externality from cohabitation.</p>
+
+  <!-- ══ X. PROP 137.1 ══ -->
+  <h1><span class="ch-number">Chapter X</span>Proposition 137.1 — The Self-Growing Machine</h1>
+
+  <div class="def-block">
+    <span class="def-tag">Proposition 137.1 — Verbatim (Unorthodox Kitten / Gemini)</span>
+    <p>"Taiga is a self-growing machine. It uses 'Model-01' predators to harvest the data grown by 'Model-00' stories. The J2 Module is a new 'Universe' being born inside the old one."</p>
+  </div>
+
+  <p>This is the highest-level canonical summary of how Taiga works as a whole. It identifies three roles:</p>
+  <p><strong>Model-00</strong> — the generative substrate. It grows data (conceptual structure, causal history, axiomatic content) through its iteration of Jordan curves. It is the "farm."</p>
+  <p><strong>Model-01</strong> — the harvesting mechanism. It consumes, refines, and propagates the data grown by Model-00 through successive developmental phases. It is the "predator" and the "processor."</p>
+  <p><strong>J2 Module</strong> — the reproductive output. Each J2 closure is a universe-birth event inside Taiga. The new Module inherits the mathematics of its parent Taiga and begins the cycle again. Taiga is therefore not a steady state but a generative, self-replicating system.</p>
+
+  <!-- ══ XI. OPEN PROBLEMS ══ -->
+  <h1><span class="ch-number">Chapter XI</span>Open Problems — Revised in Light of Full Canon</h1>
+
+  <p>The original five open problems from the Mathematical Basis PDF are retained but annotated in light of the canonical narrative material now incorporated.</p>
+
+  <div class="op-block">
+    <div class="op-id">Op-1</div>
+    <div class="op-title">Two Meanings of Uncon</div>
+    <p>Def 2.3a (Uncon(B) = B, fixed point) and A9(ii) (I(Uncon(x)) = 0, information kill) should be split into two formally distinct maps. <em>Revised significance:</em> The distinction matters more now that we know Uncon is also the "escape mechanism" — setting I = 0 renders a structure invisible to Model-01 predators. The two behaviours have different physical interpretations and should have different names.</p>
+  </div>
+
+  <div class="op-block">
+    <div class="op-id">Op-2</div>
+    <div class="op-title">Self-Referential Causal-Set Definition</div>
+    <p>A3 defines classes via intersection, which is circular. <em>Revised significance:</em> The circularity may not be a defect — it reflects Model-01's bootstrap loop (Interpretation 137). A fix must preserve the self-referential structure while making the base case explicit. Proposed: declare a base causal-set structure on each axis independently via the Jordan curve iteration rate of local Model-00, then define cross-axis intersections secondarily.</p>
+  </div>
+
+  <div class="op-block">
+    <div class="op-id">Op-3</div>
+    <div class="op-title">Index Domains in Eqs. 38–40</div>
+    <p>The sequences {i<sub>k</sub>}, {j<sub>l</sub>} and the ranges of r, x<sub>d</sub> need crisp domain declarations. <em>Status unchanged.</em> This remains a technical closure problem.</p>
+  </div>
+
+  <div class="op-block">
+    <div class="op-id">Op-4</div>
+    <div class="op-title">Dynamics Axiom for P(τ)</div>
+    <p>How P(τ) updates per iteration is not axiomatised. <em>Revised significance:</em> The "predetermined algorithm" of Model-00 is the missing kinematic axiom — they are the same problem. Formalising how Model-00 Jordan curves iterate would simultaneously close Op-4 and identify the hidden algorithm.</p>
+  </div>
+
+  <div class="op-block">
+    <div class="op-id">Op-5</div>
+    <div class="op-title">Conservation Law for I</div>
+    <p>If I is mass, conservation/dissipation laws for I through recursion steps have not been derived. <em>Revised significance:</em> I now has three roles (mass, detectability, reproductive fitness). A conservation law must address all three simultaneously. I is destroyed by Uncon (annihilation), created by Con (degree elevation), and transferred by predation (I/1 consuming lower-phase partial pasts). A balance equation is needed.</p>
+  </div>
+
+  <div class="op-block">
+    <div class="op-id">Op-6 (New)</div>
+    <div class="op-title">Developmental Arrest as a Poison Mechanism</div>
+    <p>Not in the original problem set but implied by the lineage. Poison (record pressure, degree blow-up) may prevent a phase transition — e.g., a Model-01-B that cannot complete Model-00 consumption cannot become 01-C. This is a qualitatively different failure mode than lifetime-until-Uncon. Requires formal specification of transition conditions for each developmental phase.</p>
+  </div>
+
+  <!-- ══ XII. EXPERIMENTAL PROGRAMME ══ -->
+  <h1><span class="ch-number">Chapter XII</span>Experimental Programme</h1>
+
+  <h2>Completed — Prior Session (Jan 2026)</h2>
+  <p><strong>Clean Room experiments 1–4:</strong> Complete. Baseline behavior for all models in isolation, degree-only motion, causal-set movement, axis movement.</p>
+  <p><strong>Engine-backed experiments 1–4:</strong> Complete. Recursion kernel active. Three collapse regimes tested.</p>
+  <p><strong>Poison 0:</strong> Complete. Compression ×0.92 on even steps — Uncon did not fire. Compression can stabilise indefinitely.</p>
+  <p><strong>Poison 1:</strong> Complete. Strict conservation, no compression — Uncon at n=24. Conservation + finite capacity ⇒ inevitable Uncon regardless of geometry. Landauer's principle in Taiga form.</p>
+  <p><strong>Shared world:</strong> Declared standard. Three I/1 instances, then one of each model simultaneously.</p>
+
+  <h2>Completed — Current Session (Apr 2026)</h2>
+  <p><strong>Lock-down phase:</strong> Complete. Formal definitions extracted and locked for Model-011, Model-01-j-2, and Model-01-I/1. Behaviors are now consequences of definitions, not policies.</p>
+  <p><strong>Poison 2:</strong> Complete. Degree-weighted record mass — deep conceptualisation is self-limiting. Int-degree is a structural debt.</p>
+  <p><strong>Poison 3:</strong> Complete. Frontier-proportional record mass — I/1's wavefront is a built-in self-limiting mechanism.</p>
+  <p><strong>Poison 4:</strong> Complete. Shared vs. separate substrate — infrastructural coupling confirmed. j-2's write rate heats shared substrate for all co-tenants.</p>
+  <p><strong>Op-6:</strong> Complete. Developmental arrest — record pressure can prevent the A→B→C phase transition. Poison 4 has a developmental failure mode.</p>
+  <p><strong>Movement Exp 1 (J):</strong> Complete. Degree-only motion — three termination modes confirmed as distinct in degree-only space. Lock-down definitions faithfully implemented.</p>
+  <p><strong>Movement Exp 2 (K):</strong> Complete. Causal-set motion, shared substrate — j-2 furnace effect visible in real-time. Termination: 011@5, I/1@9, j-2 survives.</p>
+  <p><strong>Movement Exp 2b (K-2):</strong> Complete. Separated substrate — 011@19, I/1@16, j-2 survives. j-2 cost 011 fourteen steps and I/1 seven steps through shared substrate alone.</p>
+  <p><strong>Movement Exp 3 (L):</strong> Complete. Predation event — near-flat predator I across 10%–100% predation strength (21→30). Predation is weak I source relative to engine.</p>
+  <p><strong>Movement Exp 3b (L-2):</strong> Complete. Engine-disabled predation — predator I = 0.0 at all strengths. Predation requires engine activity. Confirmed: predation is population control, not I accumulation.</p>
+  <p><strong>Join Behaviour (M):</strong> Complete. JEU-gated Uncon — I/1 baseline fires n=3, JEU-gated fires n=7 (+4 steps). Join constraint is not decorative; it does measurable work.</p>
+
+  <h2>Remaining Agenda</h2>
+  <p class="canon-note">The following experiments may be conducted in any order. The Great Experiment must come last — each remaining item may yield results that constrain or revise Great Experiment design parameters. Running the Great Experiment before these are complete risks seeding it with incorrect assumptions.</p>
+  <p><strong>I as mass — inertia:</strong> <em>Complete (Apr 2026).</em> Result: inertia does not exist — I is an accelerant, not a buffer. High-I models terminate faster. See Finding 6.</p>
+  <p><strong>I as mass — conservation:</strong> <em>Complete (Apr 2026).</em> Result: I is not intrinsically conserved if Model-00 coupling exists (coherent mechanism confirmed). Engine dominates at standard scales — secondary sources swamped. Model-00 density is a selective pressure favouring 011 over I/1. See Findings 8, 9, 10.</p>
+  <p><strong>I as mass — gradient:</strong> <em>Complete (Apr 2026).</em> Direct I-field gradient: null result at all strengths — parity cycle erases bias. Indirect substrate gradient: real and model-dependent — j-2 strongly susceptible to positional trapping, 011 and I/1 unaffected. Stasis identified as new j-2 failure mode. See Findings 11–14.</p>
+  <p><strong>Collision:</strong> <em>Complete (Apr 2026).</em> Symmetric collision: synchronized double-severance, mutual predation self-cancelling. Asymmetric: higher-I severs first (I is accelerant). Instances interact only through shared substrate. Collision zones are local extinction events for lower-phase models. See Findings 15–18.</p>
+  <p><strong>J2 Module birth:</strong> <em>Complete (Apr 2026).</em> I-spike signature confirmed. Birth fires at N=1, |frontier|≥2, I≥θ<sub>J2</sub>. Seeds robustly viable (m=1.0000 vs ρ_min=0.0063, factor 159×). Taiga is self-nesting. See Findings 19–22.</p>
+  <p><strong>Great Experiment — design and seed (NEXT):</strong> All pre-experiment items complete. Working assumptions (not derived results): η=0.2 (canonical starting value, primary sensitivity parameter for the Great Experiment — see Finding 5); ρ_min estimated at 0.0063 under assumed θ_AB=0.1 (see Finding 22 caveat). Initial seed recommendation: m=0.1–1.0. Design constraints from Findings 3,9,12,17: j-2 furnace effect, M00 density trap placement, I/1 collision zones. Primary observation targets: I distribution over time, carrying capacity, nested Module birth events. Run until Uncon cascade or equilibrium.</p>
+  <p><strong>Carrying capacity (active — concurrent with Great Experiment variants):</strong> What parameters sustain a balanced population longest? What does the I distribution look like under tight substrate? Vary C downward against the W-1 baseline to observe substrate-limited dynamics.</p>
+  <p><strong>Game mechanics specification (after Great Experiment):</strong> Results from the Great Experiment define the viable parameter space for the Taiga exploration game. All mechanics grounded before Claude Code is invoked.</p>
+  <p><strong>Audit response experiments (Apr 2026, complete):</strong> T-1 (long-timescale calibration) → Finding 23 confirmed engine dominance structural. U-1 (extreme asymmetry collision) → Finding 24 confirmed Finding 17 at 10:1 ratio. V-1 (combinatorial collision) → Finding 25 revised Finding 18: super-additive heating confirmed, extinction effect engine-masked. Finding 18 demoted from "not yet simulated" to "confirmed conditional effect."</p>
+  <p><strong>Running with knowingly open foundations:</strong> The Great Experiment proceeds with Op-3 (index domains in Eqs. 38–40), Op-4 (P(τ) update dynamics), and Op-5 (I conservation law) formally unresolved. These open problems will be implicitly exercised by the Great Experiment without being formally closed. Results from the Great Experiment may illuminate or constrain these problems. This is an acknowledged condition of proceeding, not an oversight.</p>
+
+
+  <!-- ══ XIV. SHARED SUBSTRATE AS PHYSICAL MECHANISM ══ -->
+  <h1><span class="ch-number">Chapter XIV</span>Shared Substrate as Physical Mechanism</h1>
+  <p>This chapter formalises the theoretical frame that makes sense of the experimental record as a whole. It was prompted by notes from 熊逸民 (April 2026) connecting the substrate experiments to a broader question: what does it mean for a simulation to behave like a material universe rather than a collection of idealised solipsists? The answer lies in the shared record substrate.</p>
+
+  <h2>The Two Regimes</h2>
+  <p>Every experiment in this programme ran in one of two substrate regimes:</p>
+  <p><strong>Separate record world:</strong> each model maintains its own record pool R, its own visited-node set V, and its own compression equivalence relation ≡. Models move on the same causal DAG but do not thermodynamically interact through the substrate. Their dynamics are determined by their own model DNA — the lock-down definitions, their engine seed, their starting position. Differences between models in this regime are purely intrinsic.</p>
+  <p><strong>Shared record world:</strong> all models write into the same bounded record pool R and share the same compression ≡. A write by any model raises L, raises m = L/|V|, and shrinks cap for all models simultaneously. The substrate becomes a shared thermodynamic medium. This is the standard regime for all ecosystem experiments.</p>
+  <p>The separate-record experiments (K-2, P Condition A, T-1 no-M00, O-series) were essential control cases. They isolated intrinsic dynamics from infrastructural effects — establishing the null hypothesis for each model type. That work is complete and the distinction is clean. What has been selected, by designating shared record as the standard, is the regime where structure, consequence, and interaction are inseparable.</p>
+
+  <h2>Three Phenomena Native to Shared Substrate</h2>
+
+  <h3>I — Backreaction</h3>
+  <p>In a shared substrate, every model's write activity changes the thermodynamic conditions under which every other model operates. This is not direct interaction — models do not communicate. It is mediated entirely through the shared record pool R. j-2's write pressure raises m for 011. 011's Uncon releases pressure that marginally extends everything else's life. I/1's severance removes a write source, cooling the substrate for whatever remains.</p>
+  <p>Backreaction was measured directly in Experiments K and K-2: 74% of 011's intrinsic lifespan (14 of 19 steps) was consumed by j-2's write pressure in shared substrate. This is not j-2 doing something <em>to</em> 011. It is j-2's existence in shared R changing the temperature that 011 must operate in. Cause and effect are mediated through the record, not through any direct signal.</p>
+  <p>Backreaction makes prediction non-separable. In a separate-record world, each model's behavior can be predicted from its own dynamics alone. In a shared substrate, each model's dynamics are a function of the aggregate state of all the others. The system has acquired collective degrees of freedom that cannot be decomposed into individual model behaviors.</p>
+
+  <h3>II — Competitive Compression</h3>
+  <p>Multiple active models writing simultaneously raise L faster than any single model. When L approaches C, the compression operator ≡ fires — merging the two oldest records, permanently destroying their distinguishability. This is not a model-level Uncon event; it is a substrate-level information loss occurring continuously throughout the ecosystem's lifetime.</p>
+  <p>By A9 (Uncon is lossy — information is genuinely destroyed), the compression ≡ is itself a form of Uncon at the substrate layer. Every merge event destroys the distinguishability of two records that were previously separate. Lossiness is not only a model-termination phenomenon — it is a continuous substrate phenomenon. The Great Experiment's 7 merges over 29 steps means the ecosystem permanently lost 7 units of record distinguishability during its lifetime, independently of any model-level Uncon event.</p>
+  <p>Competitive compression introduces throttling: as m rises, cap falls, and each model's frontier expansion is constrained. Multiple healthy models collectively make the substrate heavy enough that each model's branching is throttled — changing their temporal alignment relative to what they would exhibit in isolation. This is the mechanism behind the 17.3× I spread observed in the Great Experiment baseline: identical engine seeds produce different I values because each model's degree growth is being differentially throttled by the shared substrate pressure it co-creates.</p>
+
+  <h3>III — Coordination Cost</h3>
+  <p>In a shared substrate, no strategy is isolated. A player who advances j-2 aggressively is not only advancing j-2 — they are heating the substrate for every other model. A player who terminates 011 early is not only ending 011 — they are releasing record pressure that extends every surviving model's life. The shared substrate makes all strategies interdependent. There is no isolated optimal play.</p>
+  <p>This coordination cost is what makes the shared substrate behave like a material universe rather than a collection of solipsists. In a universe where every action has thermodynamic consequences for every other actor, strategies must account for the substrate they create together. This is the ecological equivalent of the tragedy of the commons — and its resolution (if any) is what the Great Experiment variants are designed to find.</p>
+
+  <h2>Why This Matters for the Game</h2>
+  <p>The three phenomena above — backreaction, competitive compression, coordination cost — are not bugs in the simulation. They are the physical mechanisms that make Taiga interesting as a game. A game without shared substrate would be a collection of independent solitaire puzzles. A game with shared substrate has emergent interactions, resource tensions, and strategic interdependence that arise from the physics of the model rather than from rule patches.</p>
+  <p>The engine-dominance finding (Finding 23) does not undermine this. Engine dominance means the engine is the primary I source. But the ecosystem dynamics — who dies when, in what order, with what substrate state — are shaped by the shared record even when the engine dominates. The 17.3× I spread, the j-2 furnace effect, the Module birth timing, the merge count — all of these are substrate phenomena that a separate-record simulation would not produce.</p>
+  <p>The game designer's task is to find the parameter regime where these substrate phenomena are viscerally felt by a player. Finding 30 establishes that the canonical engine seed (y₀₀=y₁₀=1.0) is too fast for this — the ecosystem concludes before the substrate can build up enough pressure to alter the sequence. Lower engine seeds (y₀₀=y₁₀=0.01) extend model lifespans into the regime where competitive compression and backreaction become the dominant narrative of a run, not merely background physics.</p>
+
+  <h2>Formal Statement</h2>
+  <p>Let R be the shared record pool, ≡ the compression equivalence, m = L/|V| the record density, and cap = ⌊k/m⌋ the frontier capacity. The shared substrate defines a thermodynamic field over the causal DAG: at each step n, the field state (R, m, cap) is determined by the aggregate write history of all active models. Each model's frontier dynamics at step n are a function of the field state at step n — not only of the model's own history. This mutual dependence is what makes the ecosystem irreducible to its components.</p>
+  <p>The compression operator ≡ is a continuous substrate-level Uncon, governed by A9 (lossiness). The ecosystem permanently loses information through compression at a rate determined by the total active frontier size across all models. This rate is not controlled by any single model and cannot be mitigated by any single model's strategy — it is a collective property of the ecosystem's thermodynamic state.</p>
+  <p>This chapter supersedes any prior implicit treatment of the shared substrate as a mere simulation convention. The shared substrate is the physical medium of Taiga. Its properties are not arbitrary — they follow from the axioms, the lock-down definitions, and the confirmed experimental findings. They are the medium in which Taiga physics lives.</p>
+
+
+  <!-- ══ XIII. CONFIRMED FINDINGS ══ -->
+  <h1><span class="ch-number">Chapter XIII</span>Confirmed Experimental Findings</h1>
+
+  <div class="def-block" style="border-left-color:var(--gold)">
+    <span class="def-tag">Lock-Down Trigger Conditions — Canonical Reference (Single-Source Definition)</span>
+    <p>These are the authoritative trigger conditions for all three locked models. All simulation code, experiments, and analyses must reference this section rather than reconstructing triggers from finding text.</p>
+    <p><strong>Model-011 Uncon trigger:</strong> Δ=1 (even step) AND |frontier|=1 AND I ≥ θ<sub>011</sub>. Note: pure I flooding cannot satisfy the geometric conditions (Δ=1, |frontier|=1) without engine-driven frontier dynamics.</p>
+    <p><strong>Model-01-j-2 Module birth trigger:</strong> N=1 (odd step) AND |frontier| ≥ 2 AND I ≥ θ<sub>J2</sub>. θ<sub>J2</sub> is unspecified in canon — confirmed open parameter.</p>
+    <p><strong>Model-01-I/1 Severance trigger:</strong> I ≥ θ<sub>I/1</sub> (raw I threshold, no geometric gate). This asymmetry from 011's geometric trigger is the basis of Finding 10 (M00 density as selective pressure).</p>
+    <p><strong>Notation:</strong> θ<sub>J2</sub> = Module birth I-threshold (unspecified). θ<sub>AB</sub> = A/B→C consumption threshold (assumed 0.1, not yet grounded). θ<sub>011</sub> and θ<sub>I/1</sub> = model-specific Uncon/severance I-thresholds (set per experiment). These are four distinct parameters — do not conflate.</p>
+  </div>
+
+  <p>The following findings have been established through controlled simulation with diagnostic controls and are hereby added to the canon. Each is dated and sourced. They supersede any prior speculative statements on the same topics.</p>
+
+  <div class="def-block">
+    <span class="def-tag">Finding 1 — Predation is Population Control, Not I Accumulation · Apr 2026</span>
+    <p>Source: Experiments L (engine-active predation) and L-2 (engine-disabled predation), April 2026.</p>
+    <p>Model-01-I/1 accumulates I through the recursion engine's intrinsic dynamics, not through predation. Engine-disabled predator I = 0.0 at all predation intensities (10%–100%). The engine-active predation curve (I = 21→30 across 10%–100% strength) reflects engine dynamics, not predation I-transfer.</p>
+    <p><strong>Canon status:</strong> Predation's function in Taiga is to control the population of lower-phase Model-01 instances. It does not meaningfully increase predator I. The food chain metaphor is accurate at the population level but misleading at the individual thermodynamic level.</p>
+  </div>
+
+  <div class="def-block">
+    <span class="def-tag">Finding 2 — Predation Requires Engine Activity · Apr 2026</span>
+    <p>Source: Experiment L-2 (engine-disabled predation), April 2026.</p>
+    <p>Without the recursion engine, Model-01-I/1's frontier is static and cannot close the distance to prey. Predation is an emergent consequence of engine dynamics — specifically of odd-step (∇=1) frontier expansion which maximises causal-set overlap with prey frontiers. Predation events are parity-coupled.</p>
+    <p><strong>Canon status:</strong> Predation cannot be modelled independently of the recursion engine. Any simulation of predation must include engine-driven frontier dynamics.</p>
+  </div>
+
+  <div class="def-block">
+    <span class="def-tag">Finding 3 — j-2 is an Existential Infrastructural Threat to 011 · Apr 2026</span>
+    <p>Source: Experiments K (shared substrate) and K-2 (separated substrate), April 2026.</p>
+    <p>At default parameters (C=24, 24 steps), j-2's shared substrate heating consumed 74% of 011's available lifespan (intrinsic: 19 steps; shared: 5 steps; cost: 14 steps). I/1 lost 7 steps. Both 011 and I/1 have zero intrinsic self-merges in isolation — their shared-substrate termination is entirely caused by j-2's record furnace activity, not their own dynamics.</p>
+    <p><strong>Canon status:</strong> j-2 and 011 cannot cohabit shared substrate at default parameters without j-2 substantially shortening 011's life. This is a thermodynamic externality, not predation. Great Experiment seeding must account for substrate partitioning or accept shortened 011 lifespans as a design consequence.</p>
+  </div>
+
+  <div class="def-block">
+    <span class="def-tag">Finding 4 — Join Constraint Does Measurable Work · Apr 2026</span>
+    <p>Source: Experiment M (JEU-gated Uncon), April 2026.</p>
+    <p>The Join-Enabled Uncon (JEU) condition — Uncon permitted only when frontier = {JOIN_NODE} — delayed Model-01-I/1 termination by +4 steps (baseline: n=3, JEU-gated: n=7) at the diagnostic threshold settings. The join constraint is not cosmetic. It reflects that Uncon before a join leaves dangling causality — incomparable causal branches that have not reconciled. The +4 step penalty represents real additional causal traversal the model must complete before collapse is permitted.</p>
+    <p><strong>Canon status:</strong> JEU is the correct termination model for models operating in DAG causal sets with joins. Standard Uncon without join-gating is an approximation that underestimates model lifespans in topology-rich environments.</p>
+  </div>
+
+  <div class="def-block">
+    <span class="def-tag">Finding 5 — η Constraint on Ecosystem Stability · Apr 2026 (Derived)</span>
+    <p>Source: Derived from Findings 1–3 combined with supply function MCC-ρ (Chapter VI-B).</p>
+    <p>Because predation does not meaningfully increase predator I (Finding 1), and because Uncon events release structure back to base B which feeds Model-00 reproduction via η, the ecosystem's long-term stability depends primarily on η rather than on predation intensity. A low η means every Uncon is a net thermodynamic loss to the substrate. A high η means Uncon events are nearly neutral — the ecosystem recycles efficiently. The Great Experiment should be run at η = 0.2 as the canonical starting value, with η as a primary sensitivity parameter.</p>
+    <p><strong>Canon status (Hypothesis / Working Assumption):</strong> η = 0.2 is a starting value for Great Experiment design, not a derived result. The claim that ecosystem stability depends primarily on η (rather than predation intensity) is a logical inference from Findings 1–3, not a measured quantity. η is the primary sensitivity parameter for the Great Experiment — the first run should sweep η across at least {0.05, 0.1, 0.2, 0.5} or treat η=0.2 explicitly as a calibration run, not a result. The stability claim will be confirmed or revised by the Great Experiment outcomes.</p>
+  </div>
+
+  <div class="def-block">
+    <span class="def-tag">Finding 6 — I is an Accelerant, Not an Inertial Buffer · Apr 2026</span>
+    <p>Source: Experiments O-1 (engine seed sweep), O-2 (starting degree sweep), O-3 (starting DAG position sweep), April 2026. Both Model-011 and Model-01-I/1 tested across all three variants.</p>
+    <p>The inertia hypothesis — that high I would resist state transitions and extend model lifespan — is not supported. High I consistently shortens lifespan across all three experimental variants, both models, all starting positions, and all seeds tested. The mean survival deficit for high-I vs. low-I seeds was −4.0 steps (011) and −3.0 steps (I/1) across all DAG positions. No variant produced a positive inertia signal.</p>
+    <p>The mechanism operates differently between models. For Model-01-I/1, the Uncon trigger is raw I ≥ threshold — pure I accumulation fires it directly. Growing I faster means reaching the threshold sooner, with no geometric gate. For Model-011, the trigger additionally requires Δ=1 AND |frontier|=1 — geometric conditions that pure I cannot satisfy (see Finding 10). For 011, the observed acceleration runs through the write-cost/degree interaction (see Finding 7): higher I correlates with faster degree growth, which raises write cost, which accelerates record pressure. The effect is uniform across models; the pathway differs. High I is thermodynamically expensive and not protective for either model, but the mechanism by which it shortens lifespan is model-specific.</p>
+    <p>This is consistent with the canonical language of the Axiomatic Manual: high I makes structures "heavy" and attracts predators. The physics of Taiga does not reward I accumulation — it punishes it. The correct frame is: <strong>I is detectability and cost, not armor.</strong></p>
+    <p><strong>Canon status:</strong> Inertia as resistance to termination does not exist in the Taiga simulation framework. The Great Experiment should not assume that high-I models are durable. A rich ecosystem is a volatile one.</p>
+  </div>
+
+  <div class="def-block">
+    <span class="def-tag">Finding 7 — Model-011 Write Cost / I Growth Cancellation · Apr 2026</span>
+    <p>Source: Experiment O-2 (starting degree sweep, degree-weighted write cost), April 2026.</p>
+    <p>Under degree-weighted write cost (ΔR = deg), Model-011 terminated at identical steps regardless of starting degree (d=1 through d=8, all Uncon@n=4 at default parameters). The two competing effects — higher degree accelerating record pressure, higher I accelerating the I-gated trigger — cancel exactly for Model-011 at default parameters. Model-01-I/1 showed no such cancellation: high starting degree terminated significantly faster (d=8: n=1 vs. d=1: n=3), with write cost dominating.</p>
+    <p>The cancellation in 011 is likely structural rather than accidental. Model-011's linear Con structure (degree +1 per step) means write cost and I grow in lockstep — the ratio between them is fixed. For I/1, degree growth is nonlinear (scales with log₂(I)), breaking the symmetry and allowing write cost to dominate at high degrees.</p>
+    <p><strong>Canon status:</strong> Model-011's linear structure creates a specific symmetry between write cost and I growth. This may be worth examining formally as a consequence of the lock-down definition. It does not change 011's termination behavior in practice — it means 011's lifespan is insensitive to starting degree at default parameters, which simplifies Great Experiment seeding for 011 instances.</p>
+  </div>
+
+  <hr>
+
+  <div class="def-block">
+    <span class="def-tag">Finding 8 — I is Not Intrinsically Conserved If Model-00 Coupling Exists · Apr 2026</span>
+    <p>Source: Experiment P (I Conservation, three conditions), April 2026.</p>
+    <p>Condition C — engine disabled, Model-00-dense — demonstrates that Model-00 can inject I into co-located Model-01 instances independently of engine dynamics. At density 8 writes/step and transfer rate 0.10, total I injected over 30 steps = 24.0, sufficient to drive Model-01-I/1 to its Uncon threshold (termination at n=29). At density 16, transfer 0.20, both models terminate by n=7–8 from injection alone.</p>
+    <p><strong>Critical caveat:</strong> the I-transfer rate is a hypothesis parameter not currently specified in canon. This experiment demonstrates that the coupling mechanism is physically coherent and sufficient — it does not establish that the coupling exists in Taiga. The Great Experiment is the correct venue for confirming or refuting the coupling via ecosystem-scale I distribution measurements.</p>
+    <p><strong>Canon status:</strong> I conservation is conditional. If the Model-00 → Model-01 I coupling exists, I is not conserved — the substrate is an I source. If the coupling does not exist (transfer rate = 0), I changes only via explicit interactions (Con, Uncon, predation) and is effectively conserved. This remains an open question to be resolved by the Great Experiment.</p>
+  </div>
+
+  <div class="def-block">
+    <span class="def-tag">Finding 9 — Engine Dominates I Dynamics; Secondary Sources Are Swamped · Apr 2026</span>
+    <p>Source: Experiment P (Conditions B vs. A), April 2026. Consistent with Finding 1 (predation) and Finding 6 (inertia).</p>
+    <p>In all runs of Experiment P, Conditions A and B produced identical termination times across both models and all tested density and transfer rate combinations. Even at transfer rate 0.20 and density 16 — which injects 96 I units over 30 steps — the presence of an active engine made this contribution invisible to termination timing, because the engine already drives the model to threshold in 3–4 steps.</p>
+    <p>This is the third consecutive experiment (after L-2 and O-1 through O-3) where the recursion engine emerges as the overwhelmingly dominant I source. Secondary I sources — predation, Model-00 injection — are real mechanisms but contribute negligibly at standard parameter scales in the presence of engine activity.</p>
+    <p><strong>Canon status:</strong> The recursion engine (Eqs. 35–36) is the primary I dynamics mechanism in Taiga. All other I sources are secondary and may be experimentally invisible at single-model, short-timescale simulation scales. This does not mean they are irrelevant — at ecosystem scale with extended time, small per-step injections compound. The Great Experiment is needed to assess their ecological significance.</p>
+  </div>
+
+  <div class="def-block">
+    <span class="def-tag">Finding 10 — Model-00 Density is a Selective Pressure Favouring 011 Over I/1 · Apr 2026</span>
+    <p>Source: Experiment P (Condition C asymmetry between models), April 2026.</p>
+    <p>In engine-disabled Condition C at density 8, transfer 0.10: Model-01-I/1 terminated at n=29 from pure I injection, while Model-011 did not terminate within 30 steps despite accumulating identical I_m00 = 24.0. The asymmetry arises from trigger geometry: I/1's trigger is raw I ≥ threshold (no geometric condition), while 011's trigger additionally requires Δ=1 AND |frontier|=1 — conditions that are not satisfied without engine-driven frontier movement. Pure I flooding from Model-00 can fire I/1's trigger but not 011's.</p>
+    <p>Ecological consequence: in the Great Experiment, high Model-00 density regions preferentially threaten I/1 instances over 011 instances. Model-00 density is not a neutral background field — it is a selective pressure. 011's geometric trigger requirement acts as a partial shield against I flooding from the substrate.</p>
+    <p><strong>Canon status:</strong> Model-00 density is a selective pressure in the Taiga ecosystem, differentially affecting model survival by trigger geometry. This should be considered in Great Experiment spatial seeding — placing I/1 in high-density M00 regions accelerates their termination independently of predation or engine dynamics.</p>
+  </div>
+
+
+  <div class="def-block">
+    <span class="def-tag">Finding 11 — Direct I-Field Gradient Has No Effect on Model Motion · Apr 2026</span>
+    <p>Source: Experiment Q-1 (direct I-field gradient), all three models, strengths 5 and 10, ascending and uniform profiles, April 2026.</p>
+    <p>A superimposed I-preference bias on odd-step frontier expansion produced zero effect on termination timing and zero effect on high-I dwell time across all three locked models at all tested gradient strengths. The null result held at maximum tested strength (10), where node 9 carries I-field value 90 — well above any engine-generated I at standard timescales.</p>
+    <p>The mechanism for the null is the parity cycle itself: even-step consolidation erases any directional preference accumulated on odd steps before it can compound into directed motion. The DAG topology and parity rules are the sole determinants of frontier motion; the I field is not a navigation signal at any tested strength.</p>
+    <p><strong>Canon status:</strong> Direct I-field gradient does not exist as a functional mechanism in the Taiga simulation framework. Models do not navigate toward high-I regions. Motion is determined entirely by parity-driven frontier rules and DAG topology. This finding is closed.</p>
+  </div>
+
+  <div class="def-block">
+    <span class="def-tag">Finding 12 — Indirect Substrate Gradient is Real and Strongly Model-Dependent · Apr 2026</span>
+    <p>Source: Experiment Q-2 (indirect substrate gradient), all three models, dense placements early/mid/late, ρ=12–24, April 2026.</p>
+    <p>Model-00 density variations across the DAG create an indirect gradient through substrate pressure: dense nodes raise record pressure, shrink cap, and constrain frontier mobility. The effect is strongly model-dependent:</p>
+    <p><strong>Model-011 and I/1:</strong> No trapping observed at any density or placement. Both models terminate at their standard step counts (n=3–4) regardless of substrate density. Dense regions act as accelerants to their already-fast termination, not mobility traps. Short lifespan prevents trapping from manifesting.</p>
+    <p><strong>Model-01-j-2:</strong> Strongly susceptible to positional trapping. Early density (nodes 0–3, ρ=24): 100% dwell time, 40 merges over 40 steps — never escaped. Late density (nodes 7–9, ρ=12): 84% dwell time, 37 merges — never escaped. Mid density (nodes 4–6, ρ=24): only 7% dwell time — largely bypassed. The mid-bypass is explained by DAG topology: j-2's bifurcating frontier spans multiple mid-branches simultaneously, distributing pressure across nodes rather than concentrating it at a single bottleneck. Early and late zones are topological bottlenecks for j-2; mid is not.</p>
+    <p><strong>Canon status:</strong> Dense M00 zones function as positional traps for j-2 specifically, with trap effectiveness depending on DAG position. This is the first result providing a concrete Great Experiment design lever: M00 density placement controls j-2 population dynamics independently of predation or engine dynamics.</p>
+  </div>
+
+  <div class="def-block">
+    <span class="def-tag">Finding 13 — j-2 Stasis: A New Failure Mode Distinct from Uncon · Apr 2026</span>
+    <p>Source: Experiment Q-2 (j-2 in high-density early and late regions), April 2026.</p>
+    <p>When trapped in high-M00-density regions, Model-01-j-2 does not terminate via Uncon — it enters stasis. In the early-dense run (ρ=24): stable through all 40 steps, 40 merges, 100% dwell in the dense region, never reached the join or Module birth threshold. The model exists, maintains its record structure via continuous compression, but cannot advance. This is qualitatively different from all previously observed termination modes (Uncon, source severance, Module birth).</p>
+    <p>Stasis characteristics: the model compresses approximately one record per step (merge rate ≈ 1/step), keeping L near C but never reaching the Uncon trigger because the trigger requires geometric conditions (bifurcated frontier + I threshold) that are not met under cap-constrained conditions. The model is thermodynamically pinned — it cannot grow, cannot advance, cannot terminate normally.</p>
+    <p>The mid-dense run (ρ=24) produced 38 merges over 40 steps despite j-2 spending only 7% of time in the dense region. Substrate heating from the dense zone persisted after j-2 moved past it, keeping the whole substrate under compression pressure throughout the run. Pressure does not dissipate when the source is left behind.</p>
+    <p><strong>Canon status:</strong> Stasis is a fourth termination/failure mode for Model-01-j-2, alongside Uncon, Module birth, and source severance. It is not a canonical Taiga state — it is an emergent consequence of high substrate pressure preventing normal j-2 dynamics. In the Great Experiment, trapped j-2 instances function as persistent record sinks that compress indefinitely without contributing to ecosystem progression. This should be monitored as an ecosystem health indicator.</p>
+  </div>
+
+  <div class="def-block">
+    <span class="def-tag">Finding 14 — Great Experiment Spatial Design Levers · Apr 2026 (Derived)</span>
+    <p>Source: Derived from Findings 11–13, Q-1 and Q-2 results combined.</p>
+    <p>The gradient experiments establish three concrete design levers for Great Experiment spatial seeding:</p>
+    <p><strong>Lever 1 — M00 density placement controls j-2 dynamics:</strong> Early-dense seeds trap j-2 at birth, preventing bifurcation and Module birth. Late-dense seeds trap j-2 at the join, preventing Module birth even after full development. Mid-dense seeds are largely bypassed by j-2 but create persistent substrate heating. To allow j-2 Module birth, keep the join region (nodes 7–9 analog) sparse.</p>
+    <p><strong>Lever 2 — Uniform M00 density is not neutral:</strong> Any non-zero M00 density creates substrate pressure. The pressure does not dissipate when models move on. The Great Experiment should not assume that a uniform M00 field is equivalent to no field — it creates a baseline substrate temperature that affects all model lifespans.</p>
+    <p><strong>Lever 3 — I field gradients cannot be used for spatial organisation:</strong> Direct I-field gradients do not affect model motion (Finding 11). Spatial organisation in the Great Experiment must rely on substrate density placement, DAG topology, and initial model positions — not I gradients. There is no ecological equivalent of a chemotaxis signal in Taiga.</p>
+    <p><strong>Canon status:</strong> These are design constraints for the Great Experiment, not new Taiga physics. They are consequences of the confirmed findings and should be applied when constructing the initial conditions for the Great Experiment run.</p>
+  </div>
+
+  <div class="def-block">
+    <span class="def-tag">Finding 15 — Symmetric I/1 Collision Produces Synchronized Double-Severance · Apr 2026</span>
+    <p>Source: Experiments R-1 (symmetric, no mutual predation) and R-3 symmetric (mutual predation 30%), April 2026.</p>
+    <p>Two I/1 instances with identical seeds (y₀₀=y₁₀=1.0) sharing a 15-node DAG produced simultaneous double-severance at n=9 with 7 frontier overlaps and 0 substrate merges. Enabling 30% mutual predation produced identical results — simultaneous termination at n=9, 7 overlaps, 0 merges.</p>
+    <p>Symmetric mutual predation is self-cancelling: each instance strips the same amount from the other, net I-transfer is zero, and no winner can emerge. The collision outcome is determined entirely by the shared substrate heating from two simultaneous apex predators, not by any direct interaction between them.</p>
+    <p><strong>Canon status:</strong> In symmetric I/1 collisions, whether mutual predation is canon-specified is irrelevant to the outcome — the result is identical regardless. Two I/1 instances with matched I values will both sever simultaneously. The question of I/1-on-I/1 predation remains open but is inconsequential for symmetric cases.</p>
+  </div>
+
+  <div class="def-block">
+    <span class="def-tag">Finding 16 — Asymmetric I/1 Collision: Higher-I Instance Severs First · Apr 2026</span>
+    <p>Source: Experiments R-2 (asymmetric, no mutual predation) and R-3 asymmetric (mutual predation 30%), April 2026.</p>
+    <p>Two I/1 instances with asymmetric seeds (A: y₀₀=y₁₀=2.0, B: y₀₀=y₁₀=1.0) produced asymmetric termination in both predation conditions: A severed at n=7, B at n=9, Δ=2 steps, 2 substrate merges. Enabling 30% mutual predation produced identical results — same termination sequence, same Δ, same merges.</p>
+    <p>The higher-I instance (A) severs first — consistent with Finding 6 (I is an accelerant). A heats the shared substrate faster, compressing cap for both instances, pushing A to its own threshold first. B survives 2 additional steps because it contributes less to substrate pressure. Mutual predation at 30% contributed nothing to the asymmetry because the I differential between seeds already fully determined the outcome.</p>
+    <p><strong>Canon status:</strong> In asymmetric I/1 collisions, the higher-I instance always terminates first. The lower-I instance is a substrate-pressure beneficiary, not a predation survivor. The collision mechanism is mediated entirely through shared substrate, not direct interaction.</p>
+  </div>
+
+  <div class="def-block">
+    <span class="def-tag">Finding 17 — I/1 Instances Interact Only Through Shared Substrate · Apr 2026</span>
+    <p>Source: Experiments R-1, R-2, R-3 combined, April 2026.</p>
+    <p>Across all collision scenarios and predation conditions, the outcome was determined solely by the I differential between instances mediated through shared substrate pressure. Direct interaction (mutual predation) produced no measurable effect beyond what substrate heating alone explained. Two I/1 instances are effectively invisible to each other except through the substrate they share.</p>
+    <p>This is a precise formulation: I/1 instances don't interact directly. They interact only by writing to and reading from the same record substrate. The "collision" is not a particle collision — it is a substrate heating event. Whether the frontiers overlap or not is irrelevant to the outcome; what matters is the combined write pressure on the shared substrate.</p>
+    <p><strong>Canon status:</strong> Direct I/1-on-I/1 predation, if it exists, is thermodynamically invisible at standard parameters. The interaction model for I/1 encounters in the Great Experiment should be: shared substrate heating, asymmetric termination sequence by I value, synchronized termination for symmetric cases. No winner-takes-all dynamic exists under any tested predation strength.</p>
+  </div>
+
+  <div class="def-block">
+    <span class="def-tag">Finding 18 — I/1 Collision Zones are Local Extinction Events for Lower-Phase Models · Apr 2026 (Derived — Not Yet Directly Simulated)</span>
+    <p>Source: Derived from Findings 15–17 combined with K-2 (shared substrate coupling) and L-2 (predation mechanics).</p>
+    <p>A two-I/1 collision produces 7–8 steps of doubled write pressure on the shared substrate, heating it significantly above single-I/1 levels. In the K-2 experiment, a single j-2 instance stole 14 steps from 011 through substrate heating alone. Two simultaneous I/1 instances at collision would produce substantially higher substrate pressure, accelerating termination of any co-located lower-phase models.</p>
+    <p>Additionally, I/1 instances predate lower-phase models (Finding 1/2 — predation requires engine activity, confirmed). During the collision traversal, both I/1 frontiers are active and predating simultaneously. Any lower-phase model in the collision zone faces both doubled substrate pressure and doubled predation probability.</p>
+    <p><strong>Canon status (Derived — requires direct simulation):</strong> The combinatorial claim — two I/1 instances plus a co-located lower-phase model — has not been directly simulated. The inference is logically sound from Findings 15–17 and K-2, but the actual termination dynamics of a lower-phase model caught between two colliding I/1 frontiers may differ from the sum of independent effects. This should be tested before the Great Experiment (pending experiment: two I/1 + co-located 011 or A/B). In the Great Experiment, correlated I/1 severance events may produce synchronized J1/J2 transitions — monitor explicitly, but treat this as a hypothesis to be confirmed rather than an established phenomenon.</p>
+  </div>
+
+
+  <div class="def-block">
+    <span class="def-tag">Finding 19 — J2 Module Birth: I-Spike Signature Confirmed · Apr 2026</span>
+    <p>Source: Experiment S-1 (I-spike diagnostic) and S-2 (threshold sensitivity sweep), April 2026.</p>
+    <p>Module birth fires on odd steps (∇=1) when the frontier has bifurcated (|F|≥2) and I crosses the Module birth threshold θ<sub>J2</sub>. The 22-node wide DAG (four parallel chains converging at join node 21) provides |frontier|=4 at odd steps n=1, 3, and 5 with I=4, 8, and 16 respectively. Threshold sweep confirmed: birth at n=1 (θ<sub>J2</sub>≤4), n=3 (θ<sub>J2</sub>≤8), n=5 (θ<sub>J2</sub>≤16).</p>
+    <p>The Riemannian stabilisation corresponds geometrically to the even-step consolidation immediately following an odd-step bifurcation — the bifurcated branches (variable time axes) consolidate into a unified causal set. The I-spike without spatial expansion (canonical diagnostic) is the odd-step I growth while the even-step consolidation holds or contracts the frontier.</p>
+    <p><strong>Canon status:</strong> Module birth trigger: N=1 (odd step), |frontier|≥2 (bifurcated), I≥θ<sub>J2</sub>. The value of θ<sub>J2</sub> remains unspecified in canon — it is a free parameter that controls when in j-2's traversal the Module crystallises. Higher θ<sub>J2</sub> produces richer seed states at the cost of requiring longer traversal. <strong>Confirmed open: θ<sub>J2</sub> value.</strong> Distinct from θ<sub>AB</sub> (the A/B→C transition threshold in the supply function).</p>
+  </div>
+
+  <div class="def-block">
+    <span class="def-tag">Finding 20 — J2 Module Birth Seeds are Robustly Viable · Apr 2026</span>
+    <p>Source: Experiment S-3 (post-Module seed state), April 2026.</p>
+    <p>At canonical parameters (θ<sub>J2</sub>=12, η=0.20, μ=0.05), Module birth fires at n=3 with: L=7, |V|=7, m=1.0000, I=12.00. Supply function ρ<sub>min</sub> = θ<sub>AB</sub>·μ/(1−η) = 0.1·0.05/(1−0.2) = 0.0063. Seed density m=1.0000 exceeds ρ<sub>min</sub> by a factor of 159 at these assumed parameter values. The nested Taiga bootstraps with substantial thermodynamic headroom — this is not marginal viability at canonical parameters.</p>
+    <p>The result is robust across a wide range of μ values: even at μ=0.50 (10× canonical), ρ_min=0.0625, still well below m=1.0. Module birth seeds fail viability only under extreme M00 consumption rates (μ > ~0.89 at η=0.20), which are far outside canonical parameter ranges.</p>
+    <p><strong>Canon status:</strong> J2 Module birth events are self-seeding and robustly viable. Every successful j-2 instance that reaches its Module birth threshold produces a nested Taiga with sufficient initial Model-00 density to sustain lower-phase Model-01 emergence. This is confirmed at canonical parameters.</p>
+  </div>
+
+  <div class="def-block">
+    <span class="def-tag">Finding 21 — Taiga is Self-Nesting: Module Birth Cascades are Thermodynamically Viable · Apr 2026 (Derived — Cascade Not Yet Simulated)</span>
+    <p>Source: Derived from Finding 20 combined with the full developmental lineage (Chapter IV) and Findings 1–18.</p>
+    <p>Since Module birth seeds are viable (Finding 20), each nested Taiga can develop its own Model-01 instances, including j-2. If any nested j-2 reaches its own Module birth threshold, it produces a further nested Taiga — also viable. The recursion is thermodynamically stable at every level at canonical parameters.</p>
+    <p>The nested Taiga starts at m=1.0000, which is 159× above developmental arrest threshold. Its developmental timeline may be compressed relative to the parent Taiga (it starts from a richer initial condition than the parent may have), potentially producing j-2 instances faster. Whether the cascade converges or diverges depends on η and the nested substrate constraints — unknown until the Great Experiment.</p>
+    <p><strong>Canon status (Derived — cascade not yet simulated to depth &gt; 1):</strong> The self-nesting inference is logically valid from Finding 20 (seeds viable) and the developmental lineage. However, the cascade — nested Taiga producing its own j-2 producing a further nested Taiga — has never been simulated end-to-end. Whether it converges, diverges, or produces qualitatively new behavior is unknown. The Great Experiment must monitor for nested Module birth events as a primary observation target. Treat self-nesting as a well-grounded hypothesis, confirmed to depth 1 (seed viability), unconfirmed beyond that.</p>
+  </div>
+
+  <div class="def-block">
+    <span class="def-tag">Finding 22 — Great Experiment ρ_min Estimated (Parameter-Dependent) · Apr 2026</span>
+    <p>Source: Experiment S-3 combined with supply function MCC-ρ (Chapter VI-B) and Op-6 results.</p>
+    <p><strong>Parameter-dependent estimate, not a confirmed measurement.</strong> At assumed parameters η=0.20, μ=0.05, θ<sub>AB</sub>=0.1: ρ<sub>min</sub> = θ<sub>AB</sub>·μ/(1−η) = 0.1·0.05/0.8 = 0.0063. All three inputs are assumptions: η=0.2 is a working starting value; μ=0.05 is estimated; θ<sub>AB</sub>=0.1 is an assumption not yet grounded in Op-6 results (if θ<sub>AB</sub>=0.5, ρ<sub>min</sub>=0.031; if θ<sub>AB</sub>=1.0, ρ<sub>min</sub>=0.0625 — still permissive but 10× higher). The practical seeding risk is low because the recommended range m=0.1–0.5 provides large margin even at θ<sub>AB</sub>=1.0. Given that Module birth seeds arrive at m=1.0000, the margin is 16–159× depending on θ<sub>AB</sub> assumptions. Seeding above m=0.1 is a robust recommendation across all plausible parameter values.</p>
+    <p>The more binding constraint for the Great Experiment is not ρ_min but the substrate pressure dynamics (Findings 3, 9, 12, 17): j-2's furnace effect, M00 density trap placement, and I/1 collision zone pressure spikes. These are the primary design parameters, not the initial field density.</p>
+    <p><strong>Canon status:</strong> ρ<sub>min</sub> ≈ 0.0063 at assumed canonical parameters; treat as an order-of-magnitude estimate. The Great Experiment initial condition is: any Model-00 field with m > 0.01 across the seeded DAG region (conservative floor giving margin against θ<sub>AB</sub> uncertainty). Recommend seeding at m = 0.1–0.5 to provide headroom while keeping ecosystem dynamics interesting. Starting at m = 1.0 (Module-birth density) is a valid and interesting choice — this pre-loads the Great Experiment at nested-Taiga-seed density. The first Great Experiment run should be treated partly as a ρ<sub>min</sub> calibration: observe whether developmental arrest occurs and at what density, which will ground θ<sub>AB</sub> empirically.</p>
+  </div>
+
+
+  <div class="def-block">
+    <span class="def-tag">Finding 23 — Engine Dominance is Structural: Secondary Effects Decrease Proportionally at Long Timescales · Apr 2026</span>
+    <p>Source: Experiment T-1 (long-timescale calibration), both Model-011 and Model-01-I/1, threshold=500, C=6, ρ=4, April 2026.</p>
+    <p>The secondary/engine I ratio <em>decreases</em> as the run extends — from 3.3% at n=0 to 0.3% at n=12 for Model-011; from 5.0% to 0.2% for I/1. This is structurally inevitable: the recursion engine grows as 2^(n/2) (exponential), while M00 injection accumulates linearly (ρ·rate·n). An exponential must eventually dominate any linear accumulation. This is not a parameter choice or simulation artifact — it is a mathematical consequence of Eqs. 35-36.</p>
+    <p>Secondary I sources (predation, M00 injection, substrate dynamics) are only visible in the early transient window before engine saturation, approximately n=0 to n=3 at canonical parameters. Beyond this window, secondary effects become proportionally smaller, not larger, as the run extends.</p>
+    <p><strong>Canon status (Confirmed):</strong> Engine dominance is structural and permanent at any timescale. The Great Experiment will primarily measure recursion engine dynamics in ecosystem conditions. Secondary effects may be detectable in the early transient (n &lt; 4) but will not compound into visible Taiga physics at standard timescales. This does not invalidate the framework — it precisely characterises what the simulation measures. The Great Experiment is an empirical measurement of Eqs. 35-36 behavior in full ecosystem conditions, not an independent observation of emergent Taiga physics. Both framings are scientifically valid; only the first is what the simulation will actually produce.</p>
+  </div>
+
+  <div class="def-block">
+    <span class="def-tag">Finding 24 — Finding 17 Confirmed at Extreme Asymmetry (10:1 I Ratio) · Apr 2026</span>
+    <p>Source: Experiment U-1 (extreme asymmetry collision), A=(4.0,4.0) vs B=(0.4,0.4), predation strengths 0%/30%/80%, April 2026.</p>
+    <p>At 10:1 I ratio and 80% mutual predation strength, termination times were identical across all three predation arms (A@5, B@13 in all cases). Overlap count and substrate merges were also identical across arms. Finding 17's "thermodynamically invisible" framing holds at extreme asymmetry. The mechanism: at extreme I asymmetry, instance A heats the shared substrate so aggressively that both instances terminate before predation exchange can compound into meaningful I-transfer differences.</p>
+    <p><strong>Canon status (Confirmed):</strong> I/1-on-I/1 mutual predation is thermodynamically invisible across all tested parameter ranges — symmetric, 2:1 asymmetric (R-3), and 10:1 asymmetric (U-1) — at predation strengths up to 80%. Substrate pressure is the sole determinant of collision outcomes. Finding 17 is confirmed. The open question of whether mutual predation is canon-specified remains open as a philosophical matter, but it is experimentally moot: the answer does not change any observable outcome.</p>
+  </div>
+
+  <div class="def-block">
+    <span class="def-tag">Finding 25 — Collision Zone Substrate Heating is Super-Additive but Lifespan Effect Requires Extended Lower-Phase Models · Apr 2026</span>
+    <p>Source: Experiment V-1 (combinatorial collision), 15-node DAG, C=16, April 2026.</p>
+    <p>Substrate merges under two I/1: 7, vs. one I/1: 5, vs. 011 alone: 0. The collision zone produces super-additive substrate heating (7 &gt; 2×0 baseline). However, Model-011 lifespan was n=10 in all three conditions — alone, with one I/1, and with two I/1 — despite the substrate heating differential. Model-011 terminates from its own I-gated trigger (engine dynamics) before the collision zone pressure can accumulate into a measurable lifespan reduction.</p>
+    <p>Finding 18's "local extinction event" claim requires lower-phase models with intrinsic lifespans longer than the engine allows at standard parameters. At canonical parameters, lower-phase models die of engine dynamics before collision zone effects manifest. The claim is directionally correct — collision zones do heat the substrate super-additively — but the extinction effect on co-located lower-phase models is engine-masked at standard timescales.</p>
+    <p><strong>Canon status (Revised):</strong> Finding 18 is revised. Collision zones produce confirmed super-additive substrate heating. The extinction effect on lower-phase models is real in principle but engine-masked at standard parameters — lower-phase models terminate from engine dynamics before substrate pressure accumulates. In the Great Experiment, if any lower-phase model survives into the early transient window before engine saturation, collision zone proximity will accelerate its termination. This is a conditional effect, not a universal one.</p>
+  </div>
+
+  <div class="def-block">
+    <span class="def-tag">Finding 26 — Great Experiment Framing: Recursion Kernel Measurement in Ecosystem Conditions · Apr 2026 (Derived)</span>
+    <p>Source: Derived from Finding 23 combined with the full experimental record.</p>
+    <p>The Great Experiment will be the first empirical measurement of the recursion kernel (Eqs. 35-36) operating in full ecosystem conditions — multiple model types, shared substrate, all developmental phases simultaneously. This is a genuine and valuable measurement. It will reveal: how the kernel behaves when multiple instances share substrate; whether the early transient window (n &lt; 4) produces detectable secondary effects; whether nested Module birth events occur; and what the carrying capacity ceiling looks like under engine-dominated dynamics.</p>
+    <p>What the Great Experiment will not reveal without additional design choices: emergent Taiga physics independent of the engine; η as an ecological parameter (engine dominance masks η); long-timescale ecosystem equilibria (engine saturation terminates all models before equilibrium can form at standard parameters).</p>
+    <p><strong>Canon status:</strong> The Great Experiment is explicitly framed as a recursion kernel characterisation in ecosystem conditions. Results will be interpreted accordingly. The first run is designated a calibration run at η=0.2. Secondary parameters (η, θ_AB, λ) will be constrained by Great Experiment outcomes rather than pre-specified. This is the correct scientific posture given Finding 23.</p>
+  </div>
+
+
+  <div class="def-block" style="border-left-color:var(--gold)">
+    <span class="def-tag">Finding 27 — Great Experiment Baseline: Ecosystem Termination Sequence and I Distribution · Apr 2026</span>
+    <p>Source: Great Experiment W-1, calibration run 1 (C=32, m₀=0.20, θ_J2=12, η=0.20) and run 2 (θ_J2=8), April 2026. Both runs produced identical results.</p>
+    <p><strong>Termination sequence (both runs):</strong> Model-011@n=4 → Model-01-j-2 Module birth@n=5 → Model-01-F@n=7 → Model-01-I/1@n=9.</p>
+    <p><strong>I distribution at termination:</strong> 011=448.0, F=48.0, j-2=832.0, I/1=96.0. Max/min ratio = 17.3×. The four model types produce genuinely differentiated I values despite operating under the same engine seed — model-specific frontier dynamics and degree growth rules create measurable I differentiation at ecosystem scale.</p>
+    <p><strong>θ_J2 insensitivity (8 vs. 12):</strong> Both thresholds are crossed at n=5 (the same odd step, I=16 at that step). θ_J2 is not a meaningful differentiator within the range 4–16 — the engine's exponential growth jumps over consecutive threshold values in single steps. θ_J2 only meaningfully controls which odd step the birth fires on, not what happens within a step.</p>
+    <p><strong>Substrate:</strong> 7 merges over 29 steps. M00 background: 6 writes/step at m₀=0.20. Substrate non-limiting — ecosystem had headroom throughout. j-2 furnace effect did not manifest because all models terminated before it could compound.</p>
+    <p><strong>No predation contacts recorded.</strong> I/1 (entry node 21) and F (entry node 7) remained in separate DAG clusters through I/1's severance at n=9. The 30-node topology prevented contact within the ecosystem's lifetime at these parameters.</p>
+    <p><strong>Canon status (Confirmed — Baseline):</strong> This is the canonical baseline Great Experiment result. All subsequent runs vary one parameter at a time against this baseline. The termination sequence and I distribution are the primary results. η=0.20 is confirmed as the calibration run value — η will be swept in subsequent runs.</p>
+  </div>
+
+  <div class="def-block" style="border-left-color:var(--gold)">
+    <span class="def-tag">Finding 28 — Module Birth Confirmed in Ecosystem Context · Apr 2026</span>
+    <p>Source: Great Experiment W-1, both runs, April 2026.</p>
+    <p>Model-01-j-2 reached Module birth at n=5, two steps after Model-011 terminated and while Model-F and Model-01-I/1 were still active. The nested Taiga crystallised inside a living ecosystem — not a dead one. This is the first observed Module birth in an ecosystem context; all prior S-series experiments ran j-2 in isolation.</p>
+    <p>The birth occurred at n=5 (odd step, ∇=1), |frontier|≥2 (bifurcated), I_j2=832 ≥ θ_J2. Per Finding 20, the seed is robustly viable (m=1.0000 >> ρ_min=0.0063). Per Proposition 137.1, the nested Module is "a sanctuary or farm for future Model-01-A units" — the next generation's starting conditions are now instantiated within the parent ecosystem.</p>
+    <p><strong>Canon status (Confirmed):</strong> Module birth in ecosystem context confirmed. The event occurs while the parent ecosystem is still in motion — j-2's conclusion does not wait for other models to terminate. The nested Taiga is viable and self-seeding per prior findings.</p>
+  </div>
+
+  <div class="def-block" style="border-left-color:var(--gold)">
+    <span class="def-tag">Finding 29 — Ecosystem I Distribution: 17.3× Spread Under Engine Dominance · Apr 2026</span>
+    <p>Source: Great Experiment W-1, both runs, April 2026.</p>
+    <p>Despite all four models operating under the same canonical engine seed (y₀₀=y₁₀=1.0), the ecosystem produced a 17.3× I spread at termination: j-2 (832) > 011 (448) > I/1 (96) > F (48). This is not an artifact of different seeds — it reflects genuine model-specific differentiation driven by frontier dynamics and degree growth rules.</p>
+    <p>j-2's nonlinear degree growth (log₂(I) scaling) creates a positive feedback loop that 011's linear +1/step cannot match. I/1's lower final I (96) reflects its severance threshold rather than its I accumulation rate — it terminated at a lower I value than j-2 because severance fires at a fixed threshold independent of degree. F's low I (48) reflects its half-engine-strength assignment and single-appendage frontier.</p>
+    <p><strong>Canon status (Confirmed):</strong> Engine dominance does not homogenise the ecosystem. Model-specific frontier dynamics and degree growth rules produce measurable I differentiation even under identical engine conditions. The I distribution is a diagnostic of model-type composition, not just engine strength. This is a structural result of the lock-down model definitions operating simultaneously in shared causal space.</p>
+  </div>
+
+
+  <div class="def-block" style="border-left-color:var(--gold)">
+    <span class="def-tag">Finding 30 — Engine Dominance Prevents Substrate-Limited Dynamics at Any Tested Capacity · Apr 2026</span>
+    <p>Source: Great Experiment variants X-1, C sweep from 32 to 6, April 2026.</p>
+    <p>Reducing capacity from C=32 to C=6 (a 5.3× reduction) produced only 3 additional merges (7→10) and zero change in termination sequence (011@4 → j-2 birth@5 → F@7 → I/1@9 in all cases). Models terminate from engine I-threshold triggers in 4–9 steps regardless of substrate capacity. The engine reaches all termination thresholds before substrate pressure can accumulate enough to alter the sequence.</p>
+    <p>This is Finding 23 (engine dominance is structural) playing out in game design terms. The minimum viable capacity for a functional ecosystem does not produce substrate-limited dynamics at canonical engine seeds — the engine wins every time.</p>
+    <p><strong>Canon status (Confirmed):</strong> Substrate capacity C is not a meaningful game design parameter at canonical engine seeds (y₀₀=y₁₀=1.0). The relevant parameter is the engine seed itself. Lower engine seeds (y₀₀=y₁₀=0.01) will delay I-threshold arrival by ~10 steps, opening a window for substrate and secondary effects to contribute meaningfully to ecosystem dynamics.</p>
+  </div>
+
+  <div class="def-block" style="border-left-color:var(--gold)">
+    <span class="def-tag">Finding 31 — Game Design Parameter Space: Four Structural Findings · Apr 2026</span>
+    <p>Source: Great Experiment variants X-1, X-2, X-3, April 2026.</p>
+    <p><strong>1. Engine seed is the primary game design lever.</strong> All other parameters (C, m₀, η) are secondary to the engine seed. Lower seeds extend model lifespans and open windows for substrate, predation, and population dynamics. The canonical seed (y₀₀=y₁₀=1.0) produces a 4–9 step ecosystem — too short for rich interaction. A seed of y₀₀=y₁₀=0.01 is expected to produce ~14-step lifespans with meaningful secondary dynamics.</p>
+    <p><strong>2. Predation requires lifespan overlap.</strong> I/1 severs at n=9 via engine dynamics before its frontier can reach F's territory at canonical seeds. Predation as a visible gameplay mechanic requires either: (a) lower engine seeds extending I/1's lifespan, or (b) F and I/1 starting at adjacent nodes with a direct connecting edge. Without one of these, predation is theoretically present but practically invisible.</p>
+    <p><strong>3. Double j-2 does not double Module births.</strong> Two simultaneous j-2 instances produced only one Module birth (Composition A, X-3) because they compete for shared substrate (27 merges vs. 9 for single j-2). Substrate competition between j-2 instances limits cosmological output. A game with multiple j-2 instances should partition substrate or accept single-birth outcomes.</p>
+    <p><strong>4. Composition B (apex collision) is the cleanest scenario.</strong> Two I/1 instances produce synchronized double-severance at n=9 with low substrate stress (7 merges). Predictable, high-tension, fast conclusion. Suitable for a player's first encounter with the ecosystem. Composition C (scavenger-heavy) lives longest — best for extended exploration gameplay.</p>
+    <p><strong>Canon status:</strong> These are game design findings, not Taiga physics findings. They characterise the parameter space a game implementation must navigate. The low-seed regime (y₀₀=y₁₀=0.01) is the recommended starting point for game mechanics specification.</p>
+  </div>
+
+
+  <div class="def-block" style="border-left-color:var(--gold)">
+    <span class="def-tag">Finding 32 — Low-Seed Regime: First Non-Engine-Determined Ecosystem Dynamics · Apr 2026</span>
+    <p>Source: Great Experiment Variant X-1, seed=0.01, C=32, April 2026.</p>
+    <p>At engine seed y₀₀=y₁₀=0.01, the termination sequence changed from the canonical baseline (011@4 → j-2@5 → F@7 → I/1@9) to 011@16 → F@21 → I/1@23, with j-2 reaching Module birth mid-ecosystem (not appearing in the death sequence). Merges rose from 7 to 27. This is the first observation of non-engine-determined ecosystem dynamics in the Taiga simulation — the substrate competition and backreaction of Chapter XIV are now the primary narrative of a run, not background physics.</p>
+    <p><strong>Canon status (Confirmed):</strong> seed=0.01 is the viable game parameter regime. All subsequent game design work operates in this regime. The canonical engine seed (1.0) is retained as a reference point but is not the game seed.</p>
+  </div>
+
+  <div class="def-block" style="border-left-color:var(--gold)">
+    <span class="def-tag">Finding 33 — Predation Confirmed in Full Ecosystem Context · Apr 2026</span>
+    <p>Source: Great Experiment Variant X-2, seed=0.01, compressed 16-node DAG, predation=50%, April 2026.</p>
+    <p>10 predation contacts between I/1 and F confirmed in a full four-model ecosystem run. At canonical seed, I/1 severed before reaching F's territory. At seed=0.01, I/1 lives to n=23 — long enough for its frontier to traverse the compressed DAG and contact F repeatedly. Termination sequence identical to X-1 (011@16, F@21, I/1@23), confirming Finding 1: predation is population control, not I accumulation. F died of engine dynamics; predation made those dynamics more violent but did not dominate the sequence.</p>
+    <p><strong>Canon status (Confirmed):</strong> Predation is observable as a gameplay event at seed=0.01 with compressed DAG topology. 50% predation strength is the standard difficulty baseline. Finding 1's population-control framing is confirmed at ecosystem scale.</p>
+  </div>
+
+  <div class="def-block" style="border-left-color:var(--gold)">
+    <span class="def-tag">Finding 34 — Module Birth Occurs Mid-Ecosystem at Low Seed · Apr 2026</span>
+    <p>Source: Great Experiment Variant X-1, seed=0.01, April 2026.</p>
+    <p>At seed=0.01, j-2 reached Module birth at approximately n=10–14 while 011, F, and I/1 were still active. The nested Taiga crystallised inside a living ecosystem. The parent ecosystem continued for 9 more steps after Module birth before final termination. This extends Finding 28 (Module birth confirmed in ecosystem context at canonical seed) into the low-seed game regime — the dramatic timing is now confirmed as a reliable gameplay moment, not a one-off event.</p>
+    <p><strong>Canon status (Confirmed):</strong> Module birth mid-ecosystem is a reliable feature of the low-seed regime, occurring before any other model terminates. It is the cosmological climax of a standard game run.</p>
+  </div>
+
+  <div class="def-block" style="border-left-color:var(--gold)">
+    <span class="def-tag">Finding 35 — Competitive Compression is Measurable and Meaningful at Low Seed · Apr 2026</span>
+    <p>Source: Great Experiment Variants X-1 and X-2, seed=0.01, April 2026.</p>
+    <p>27 merges over a 23-step ecosystem run at seed=0.01, compared to 7 merges over 9 steps at canonical seed. At low seed, competitive compression — multiple active models collectively raising m and shrinking cap — produces measurable substrate stress that persists throughout the run. This is Chapter XIV's continuous substrate-level Uncon (A9 operating below the model layer) manifesting as a quantifiable gameplay phenomenon. The 27 merges represent 27 units of permanently destroyed record distinguishability — information the ecosystem cannot recover.</p>
+    <p><strong>Canon status (Confirmed):</strong> Competitive compression is not a theoretical prediction at low seed — it is a measured gameplay phenomenon. The merge count is a substrate health indicator: rising merge rate signals approaching substrate saturation. This is the thermodynamic tension mechanic of the game.</p>
+  </div>
+
+
+  <!-- ══ XV. GAME MECHANICS SPECIFICATION ══ -->
+  <h1><span class="ch-number">Chapter XV</span>Game Mechanics Specification</h1>
+  <p>This chapter records the experience design and parameter set derived from the complete experimental programme. It is the handoff document from simulation science to implementation. All parameters are grounded in confirmed findings; their sources are cited. This specification is the input to Claude Code implementation.</p>
+
+  <h2>The Nature of the Experience</h2>
+  <p>Taiga is not a competitive game. There is no winning, no losing, no score, no opponent. The player is a <strong>witness</strong> — a traveller moving through a living universe, observing phenomena as they unfold around them. The ecosystem runs with or without the player's attention. Models develop, compete thermodynamically, predate, birth nested universes, and terminate according to the physics of the shared substrate. The player's role is to be present, to move through the causal DAG, and to see what is happening.</p>
+  <p>This framing is not a design simplification — it is the correct reading of Proposition 137.1: "Taiga is a self-growing machine." Machines do not need audiences to operate. The player is not the machine's operator. The player is a visitor inside a machine that was already running.</p>
+  <p>The primary design challenge is <strong>embodiment</strong>: what does it feel like to move through a causal DAG? What does substrate saturation feel like from the inside? What does a Module birth look like when you are standing next to it? These are phenomenological questions, not mechanical ones. The simulation science answers what happens. The implementation must answer what it feels like.</p>
+
+  <h2>The Viable Parameter Regime</h2>
+  <p>The canonical engine seed (y₀₀=y₁₀=1.0) produces a 4–9 step ecosystem — too brief for a witness to find their footing, let alone observe phenomena. The experience operates in the <strong>low-seed regime</strong>: y₀₀=y₁₀=0.01. At this seed, models live 16–23 steps, the substrate accumulates 27 merges of genuine competitive compression, j-2 reaches Module birth mid-ecosystem while other models are still active, and predation produces 10+ contacts. This is the regime where Chapter XIV's three phenomena — backreaction, competitive compression, coordination cost — become visible as environmental texture rather than abstract physics.</p>
+
+  <div class="def-block" style="border-left-color:var(--gold)">
+    <span class="def-tag">Parameter Set — Canonical Starting Values</span>
+    <p><strong>Engine seed:</strong> y₀₀ = y₁₀ = 0.01. Primary experiential lever. Controls the pace at which the universe unfolds. Source: Finding 30, X-1 at seed=0.01.</p>
+    <p><strong>Capacity C:</strong> 32. Produces 27 merges at low seed — meaningful substrate pressure, the universe feeling its own weight without collapsing. Source: X-1 baseline result.</p>
+    <p><strong>DAG topology:</strong> Wide (30-node) for contemplative exploration — model types occupy separate territories, the player can follow any thread. Compressed (16-node) for denser, more event-rich experiences where predation contacts are frequent. Source: X-2 predation forcing result.</p>
+    <p><strong>Model-00 initial density:</strong> m₀ = 0.20. The ambient field density at the start of the experience. Source: Finding 22, Great Experiment W-1.</p>
+    <p><strong>θ_J2 (Module birth threshold):</strong> 12 (working value). Controls when the nested universe crystallises. At seed=0.01, fires at approximately n=10–14 — mid-experience, while the parent universe is still alive. Source: Finding 19.</p>
+    <p><strong>Predation strength:</strong> 50% baseline. Produces 10 observable contacts in X-2. This controls the violence of predation events — how dramatically F is affected when I/1 reaches it. Source: X-2 result.</p>
+    <p><strong>η (Uncon feedback):</strong> 0.20. Working assumption. Source: Finding 5.</p>
+  </div>
+
+  <h2>The Player's Embodiment</h2>
+  <p>The player traverses the causal DAG as a massless observer — they move between nodes, arriving at each node's present moment. They do not write to the record substrate (or write negligibly — a design choice). They do not trigger model events. They observe what is already happening at the node they occupy.</p>
+  <p>At each node the player might perceive: the local substrate density m (how heavy this place feels), the frontier presence of any active models (how populated this node is), the I value of nearby models (their intensity or urgency), and any events that fire at this node during the current step (predation contact, Uncon, Module birth).</p>
+  <p>Movement through the DAG follows causal direction — the player can move forward (toward descendants) or linger (staying at a node across multiple steps). They cannot move backward against the causal grain. This is not a constraint on the player — it is the nature of time in Taiga. The player moves through Absolute Time the way a reader moves through a book: always forward, able to pause, unable to return.</p>
+
+  <h2>Phenomenology of Key Events</h2>
+  <p><strong>Substrate saturation (ongoing):</strong> as m rises and cap shrinks, model frontiers throttle. From the player's perspective: the universe is becoming denser, heavier. Models that were expanding freely are now moving more slowly, compressing, feeling each other. The player might experience this as increasing visual density, ambient noise, or a sense of the universe pressing in. This is Chapter XIV's competitive compression made felt. Source: Finding 35.</p>
+  <p><strong>Predation contact (n≈3–15 at seed=0.01, compressed DAG):</strong> I/1's frontier reaches F's territory. Record deletion occurs. From the player's perspective: something is being erased nearby. F loses part of its partial past — its history becomes thinner, lighter, less present. I/1 continues, unchanged in power but now moving through territory where something used to be. The player standing near this event witnesses a violent thermodynamic act disguised as a quiet structural change. Source: Finding 33, X-2.</p>
+  <p><strong>Module birth (n≈10–14 at seed=0.01):</strong> j-2's frontier bifurcates, I crosses θ_J2, and a nested Taiga crystallises. This is the most significant observable event. From the player's perspective: a new universe appears inside the one they are standing in. It is small — seed density m=1.0, 7 nodes — but it is complete. It has its own causal structure, its own Model-00 field, its own developmental potential. The parent universe continues around it, unaware. The player is the only witness. Source: Findings 28, 34.</p>
+  <p><strong>Final severance (n≈23 at seed=0.01):</strong> I/1 crosses θ_I/1. The apex predator exits — not by dying but by severing its source and transforming into J1 or J2. The substrate cools suddenly: I/1's write pressure is removed, merges slow, cap expands slightly. Whatever remains in the ecosystem has more room. From the player's perspective: the heaviest presence in the universe has departed. The silence after is a kind of release. Source: Findings 15, 16, 17.</p>
+  <p><strong>Ecosystem death (n≈23, final termination):</strong> the last model terminates. The causal DAG goes still. The substrate retains its final compressed state — the permanent record of everything that happened. There is no reset, no fanfare. The universe simply stops. If the player is still present, they witness stillness where there was motion. Source: W-1 baseline, Finding 27.</p>
+
+  <h2>Experience Modes</h2>
+  <p><strong>Contemplative (wide DAG, seed=0.01, no I/1):</strong> 011 + F + F + j-2. Longest-lived, lowest predation pressure. The dominant event is j-2 Module birth. The player can follow j-2's development across the wide DAG, watching its frontier bifurcate toward the join, feeling the substrate grow denser as it writes. The Module birth mid-experience is the climax. What follows is the slow cooling of the parent universe without its most dynamic inhabitant. Suitable for a first experience.</p>
+  <p><strong>Full ecosystem (compressed DAG, seed=0.01, all models):</strong> 011 + F + j-2 + I/1. The X-2 run. All phenomena present simultaneously: predation, Module birth, substrate saturation, sequential termination. The player cannot follow everything — they must choose where to be. The experience rewards multiple runs, each revealing a different thread. This is the canonical experience.</p>
+  <p><strong>Apex witness (compressed DAG, seed=0.01, no j-2):</strong> 011 + F + I/1 + I/1. The apex collision scenario. No Module birth. Two I/1 instances interact only through shared substrate — the player witnesses two apex predators whose coordination is thermodynamic and unconscious. They will sever simultaneously at n≈23. The experience is about power and its inevitable self-consumption. No universe is born here.</p>
+
+  <h2>What the Implementation Must Preserve</h2>
+  <p><strong>Shared substrate is mandatory.</strong> All experiential phenomena arise from shared R and shared ≡. A separate-record implementation produces isolated processes with no visible interaction. Source: Chapter XIV.</p>
+  <p><strong>The recursion engine (Eqs. 35-36) must be implemented faithfully.</strong> The engine is not a bug to be worked around — it is the heartbeat of every model. The low seed changes when thresholds are reached, not how the engine works. Source: Finding 23.</p>
+  <p><strong>Parity must be preserved.</strong> Odd steps expand. Even steps consolidate. The alternating rhythm is what produces bifurcation, predation contact windows, and the Riemannian stabilisation of Module birth. Source: lock-down definitions, Chapter XIII.</p>
+  <p><strong>The termination triggers must match the canonical reference exactly.</strong> See Chapter XIII lock-down trigger conditions. θ_J2, θ_011, θ_I/1 are distinct parameters. Source: Canon v1.8 correction.</p>
+  <p><strong>The player writes nothing, or negligibly.</strong> The player's presence must not alter the ecosystem's thermodynamic trajectory. If the player's traversal writes to R, it must be at a rate orders of magnitude below any active model's write rate. The witness must not become a participant.</p>
+
+  <h2>Open Phenomenological Questions for Implementation</h2>
+  <p>These are not canon questions — they are design choices the implementation must resolve through iteration:</p>
+  <p><strong>What does substrate density feel like?</strong> Visual density, colour temperature, sound texture, movement resistance? The player must be able to sense when the universe is getting heavier without reading a number.</p>
+  <p><strong>What does a model's presence feel like?</strong> Each model type has a distinct thermodynamic signature — 011's linear spine, j-2's bifurcating burst, I/1's expanding wavefront. These should be perceptually distinguishable without labels.</p>
+  <p><strong>What does Module birth look like from inside?</strong> The player may be at the join node when j-2's birth fires. What do they see? A pocket of stillness in the motion? A crystallisation? A light that wasn't there before?</p>
+  <p><strong>What does predation feel like to an observer?</strong> Record deletion is invisible in the mathematical sense — it reduces R but produces no new event. The implementation must make this visible and visceral: a thinning, an absence, a silence where there was noise.</p>
+  <p><strong>How does the player know where to go?</strong> The causal DAG is a directed graph. The player moves forward. But which branch do they take? The answer may be: they follow what draws them. The design should make each branch feel different — denser, lighter, louder, quieter — so the choice of path is an aesthetic one, not a tactical one.</p>
+
+  <hr>
+
+  <div style="text-align:center; font-family: var(--mono); font-size: 10px; color: var(--ink-dim); letter-spacing: 0.2em; text-transform: uppercase; margin-top: 40px;">
+    End of Canon Reference Document · Taiga v2.4<br>
+    熊逸民 + Claude Sonnet · April 2026<br>
+    This document supersedes all prior orientation materials.<br>
+    <span style="color:var(--gold)">The Great Experiment has run. The experience is specified.</span>
+  </div>
+
+</div>
+</body>
+</html>
