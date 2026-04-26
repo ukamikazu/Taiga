@@ -1,21 +1,22 @@
 import type { EcosystemConfig, EventKind } from '../types.js'
 import { buildDAG } from '../engine/dag.js'
-import {
-  WIDE_011_ENTRY,
-  WIDE_F_ENTRY,
-  WIDE_J2_ENTRY,
-  WIDE_I1_ENTRY,
-} from '../engine/dag.js'
+import { WIDE_J2_ENTRY } from '../engine/dag.js'
 import { initEcosystem, tickEcosystem } from '../ecosystem.js'
-import { makeProbe, refreshProbe, moveProbe, jumpProbe } from '../probe.js'
-import { layoutDAG } from './layout.js'
+import {
+  makeProbe,
+  refreshProbe,
+  moveProbe,
+  moveProbeBack,
+  jumpProbe,
+} from '../probe.js'
+import { layoutDAG, type LayoutMap } from './layout.js'
 import { EVENT_FLASH } from './palette.js'
 import { type FlashOverlay, type RenderState, renderFrame } from './renderer.js'
 
 export interface AnimatorOptions {
   config:          EcosystemConfig
   canvas:          HTMLCanvasElement
-  tickIntervalMs?: number   // default 500ms per ecosystem tick
+  tickIntervalMs?: number   // ms per tick in auto-play mode (default 600)
 }
 
 export interface Animator {
@@ -24,73 +25,104 @@ export interface Animator {
   reset(): void
 }
 
-// Cluster entry nodes for Tab-jumping (wide-30 topology)
-const CLUSTER_ENTRIES = [
-  WIDE_011_ENTRY,   // 0
-  WIDE_F_ENTRY,     // 20
-  WIDE_J2_ENTRY,    // 40
-  WIDE_I1_ENTRY,    // 60
-]
-
 export function createAnimator(opts: AnimatorOptions): Animator {
   const { config, canvas } = opts
-  const tickIntervalMs = opts.tickIntervalMs ?? 500
+  const tickIntervalMs = opts.tickIntervalMs ?? 600
 
   const ctx   = canvas.getContext('2d')!
   const nodes = buildDAG(config.dag)
 
   let layout         = layoutDAG(config.dag, canvas.width, canvas.height)
+  let columns        = buildColumns(layout)
   let ecosystemState = initEcosystem(config)
   let probe          = refreshProbe(makeProbe(WIDE_J2_ENTRY), ecosystemState, nodes)
   let flashes: FlashOverlay[] = []
-  let lastTickMs  = -Infinity
-  let rafId       = 0
-  let active      = false
+  let lastTickMs = 0
+  let isPaused   = true   // start paused — player steps manually
+  let rafId      = 0
+  let active     = false
 
-  // ── Probe keyboard handling ────────────────────────────────────────────────
+  // ── Ecosystem step ─────────────────────────────────────────────────────────
 
-  // Index into CLUSTER_ENTRIES for Tab-cycling
-  let clusterIdx = CLUSTER_ENTRIES.indexOf(WIDE_J2_ENTRY)
+  function stepEcosystem(): void {
+    if (!ecosystemState.running) return
+    ecosystemState = tickEcosystem(ecosystemState, config)
+
+    probe = refreshProbe(probe, ecosystemState, nodes)
+
+    for (const ev of ecosystemState.events) {
+      if (ev.step !== ecosystemState.step) continue
+      const color = EVENT_FLASH[ev.kind as EventKind] ?? 'rgba(255,255,255,0.8)'
+      if (ev.kind === 'ModelStep') continue
+
+      let nodeIds: number[]
+      if (ev.kind === 'SubstrateMerge') {
+        const all: number[] = []
+        for (const m of ecosystemState.models.values()) all.push(...m.visited)
+        nodeIds = [...new Set(all)]
+      } else {
+        const model = ecosystemState.models.get(ev.modelId)
+        nodeIds = model ? [...model.frontier] : []
+      }
+      if (nodeIds.length > 0) flashes.push({ nodeIds, color, ttl: 14, maxTtl: 14 })
+    }
+  }
+
+  // ── Lateral (←/→) navigation via layout columns ───────────────────────────
+
+  function moveLateral(direction: -1 | 1): void {
+    const probePos = layout.get(probe.nodeId)
+    if (!probePos) return
+
+    const currentColIdx = columns.findIndex(col => col.includes(probe.nodeId))
+    if (currentColIdx === -1) return
+
+    const nextColIdx = currentColIdx + direction
+    if (nextColIdx < 0 || nextColIdx >= columns.length) return  // hard border
+
+    const col       = columns[nextColIdx]!
+    const targetId  = nearestY(col, layout, probePos.y)
+    probe = jumpProbe(probe, targetId, ecosystemState, nodes)
+  }
+
+  // ── Keyboard ───────────────────────────────────────────────────────────────
 
   function handleKey(e: KeyboardEvent): void {
-    const succs = probe.successors
-
     switch (e.key) {
-      case ' ':
-      case 'Enter':
+      case ' ': {
+        e.preventDefault()
+        stepEcosystem()
+        break
+      }
+      case 'p':
+      case 'P': {
+        isPaused = !isPaused
+        if (!isPaused) lastTickMs = 0  // tick immediately on resume
+        break
+      }
+      case 'ArrowUp': {
+        e.preventDefault()
+        const back = moveProbeBack(probe, ecosystemState, nodes)
+        if (back) probe = back
+        break
+      }
       case 'ArrowDown': {
         e.preventDefault()
-        if (succs.length > 0) {
-          // Default forward: first (lower-numbered) successor
-          const next = moveProbe(probe, succs[0]!, ecosystemState, nodes)
+        const { successors } = probe
+        if (successors.length > 0) {
+          const next = moveProbe(probe, successors[0]!, ecosystemState, nodes)
           if (next) probe = next
         }
         break
       }
       case 'ArrowLeft': {
         e.preventDefault()
-        if (succs.length > 0) {
-          const next = moveProbe(probe, succs[0]!, ecosystemState, nodes)
-          if (next) probe = next
-        }
+        moveLateral(-1)
         break
       }
       case 'ArrowRight': {
         e.preventDefault()
-        if (succs.length > 1) {
-          // At a branch: right key takes the higher-indexed successor
-          const next = moveProbe(probe, succs[succs.length - 1]!, ecosystemState, nodes)
-          if (next) probe = next
-        } else if (succs.length === 1) {
-          const next = moveProbe(probe, succs[0]!, ecosystemState, nodes)
-          if (next) probe = next
-        }
-        break
-      }
-      case 'Tab': {
-        e.preventDefault()
-        clusterIdx = (clusterIdx + 1) % CLUSTER_ENTRIES.length
-        probe = jumpProbe(probe, CLUSTER_ENTRIES[clusterIdx]!, ecosystemState, nodes)
+        moveLateral(+1)
         break
       }
       case 'r':
@@ -106,7 +138,8 @@ export function createAnimator(opts: AnimatorOptions): Animator {
   function onResize(): void {
     canvas.width  = window.innerWidth
     canvas.height = window.innerHeight
-    layout = layoutDAG(config.dag, canvas.width, canvas.height)
+    layout  = layoutDAG(config.dag, canvas.width, canvas.height)
+    columns = buildColumns(layout)
   }
 
   // ── RAF loop ───────────────────────────────────────────────────────────────
@@ -114,36 +147,16 @@ export function createAnimator(opts: AnimatorOptions): Animator {
   function loop(now: DOMHighResTimeStamp): void {
     if (!active) return
 
-    if (ecosystemState.running && now - lastTickMs >= tickIntervalMs) {
-      ecosystemState = tickEcosystem(ecosystemState, config)
-      lastTickMs = now
-
-      // Refresh probe sense after each ecosystem tick (the world changed)
-      probe = refreshProbe(probe, ecosystemState, nodes)
-
-      // Convert this tick's events to flash overlays
-      for (const ev of ecosystemState.events) {
-        if (ev.step !== ecosystemState.step) continue
-        const color = EVENT_FLASH[ev.kind as EventKind] ?? 'rgba(255,255,255,0.8)'
-        if (ev.kind === 'ModelStep') continue
-
-        let nodeIds: number[]
-        if (ev.kind === 'SubstrateMerge') {
-          const all: number[] = []
-          for (const m of ecosystemState.models.values()) all.push(...m.visited)
-          nodeIds = [...new Set(all)]
-        } else {
-          const model = ecosystemState.models.get(ev.modelId)
-          nodeIds = model ? [...model.frontier] : []
-        }
-
-        if (nodeIds.length > 0) flashes.push({ nodeIds, color, ttl: 12, maxTtl: 12 })
+    if (!isPaused && ecosystemState.running) {
+      if (lastTickMs === 0 || now - lastTickMs >= tickIntervalMs) {
+        stepEcosystem()
+        lastTickMs = now
       }
     }
 
     flashes = flashes.map(f => ({ ...f, ttl: f.ttl - 1 })).filter(f => f.ttl > 0)
 
-    const rs: RenderState = { ecosystemState, nodes, layout, flashes, probe }
+    const rs: RenderState = { ecosystemState, nodes, layout, flashes, probe, isPaused }
     renderFrame(ctx, rs)
 
     rafId = requestAnimationFrame(loop)
@@ -153,10 +166,10 @@ export function createAnimator(opts: AnimatorOptions): Animator {
 
   function reset(): void {
     ecosystemState = initEcosystem(config)
-    clusterIdx     = CLUSTER_ENTRIES.indexOf(WIDE_J2_ENTRY)
     probe          = refreshProbe(makeProbe(WIDE_J2_ENTRY), ecosystemState, nodes)
     flashes        = []
-    lastTickMs     = -Infinity
+    isPaused       = true
+    lastTickMs     = 0
   }
 
   return {
@@ -175,4 +188,40 @@ export function createAnimator(opts: AnimatorOptions): Animator {
     },
     reset,
   }
+}
+
+// ── Column builder ────────────────────────────────────────────────────────────
+//
+// Groups nodes by x-position (within EPS pixels) to create navigable columns
+// for ← / → movement.  In wide-30: 6 columns — 011, F, j2-left, j2-centre,
+// j2-right, I/1.  Columns are sorted left-to-right by ascending x.
+
+const COLUMN_EPS = 15  // pixels — nodes within this x-distance share a column
+
+function buildColumns(layout: LayoutMap): number[][] {
+  const sorted = [...layout.entries()].sort((a, b) => a[1].x - b[1].x)
+  const cols: { x: number; nodes: number[] }[] = []
+
+  for (const [id, pos] of sorted) {
+    const last = cols.at(-1)
+    if (!last || pos.x - last.x > COLUMN_EPS) {
+      cols.push({ x: pos.x, nodes: [id] })
+    } else {
+      last.nodes.push(id)
+    }
+  }
+
+  return cols.map(c => c.nodes)
+}
+
+function nearestY(col: number[], layout: LayoutMap, targetY: number): number {
+  let bestId   = col[0]!
+  let bestDist = Infinity
+  for (const id of col) {
+    const pos  = layout.get(id)
+    if (!pos) continue
+    const dist = Math.abs(pos.y - targetY)
+    if (dist < bestDist) { bestDist = dist; bestId = id }
+  }
+  return bestId
 }

@@ -17,6 +17,7 @@ export interface RenderState {
   layout:         LayoutMap
   flashes:        FlashOverlay[]
   probe:          ProbeState
+  isPaused:       boolean
 }
 
 const R_NODE     = 5
@@ -27,10 +28,10 @@ export function renderFrame(
   ctx: CanvasRenderingContext2D,
   rs: RenderState,
 ): void {
-  const { ecosystemState: es, nodes, layout, flashes, probe } = rs
+  const { ecosystemState: es, nodes, layout, flashes, probe, isPaused } = rs
   const { width, height } = ctx.canvas
 
-  // Background — darkens / lightens with global substrate density
+  // Background — brightens with global substrate density
   ctx.fillStyle = '#08080f'
   ctx.fillRect(0, 0, width, height)
 
@@ -139,70 +140,69 @@ export function renderFrame(
     ctx.restore()
   }
 
-  // ── Probe marker + sense panel ───────────────────────────────────────────────
+  // ── Probe ────────────────────────────────────────────────────────────────────
   drawProbe(ctx, probe, layout, width)
 
   // ── Global HUD ───────────────────────────────────────────────────────────────
-  drawHUD(ctx, es)
+  drawHUD(ctx, es, isPaused, height)
 }
 
-// ── Probe ─────────────────────────────────────────────────────────────────────
+// ── Probe rendering ───────────────────────────────────────────────────────────
 
 function drawProbe(
-  ctx:    CanvasRenderingContext2D,
-  probe:  ProbeState,
-  layout: LayoutMap,
+  ctx:     CanvasRenderingContext2D,
+  probe:   ProbeState,
+  layout:  LayoutMap,
   canvasW: number,
 ): void {
   const pos = layout.get(probe.nodeId)
   if (!pos) return
 
-  // White crosshair ring at probe location
+  // White crosshair ring
   ctx.save()
-  ctx.strokeStyle = 'rgba(255,255,255,0.9)'
-  ctx.lineWidth   = 1.5
+  ctx.strokeStyle = 'rgba(255,255,255,0.92)'
+  ctx.lineWidth   = 1.8
   ctx.beginPath()
   ctx.arc(pos.x, pos.y, R_FRONTIER + 4, 0, Math.PI * 2)
   ctx.stroke()
-  // Small inner dot
-  ctx.fillStyle = 'rgba(255,255,255,0.7)'
+  ctx.fillStyle = 'rgba(255,255,255,0.75)'
   ctx.beginPath()
   ctx.arc(pos.x, pos.y, 2.5, 0, Math.PI * 2)
   ctx.fill()
   ctx.restore()
 
-  // Sense panel — offset left if probe is in right half of canvas
-  const panelW  = 180
-  const panelX  = pos.x > canvasW / 2 ? pos.x - panelW - 18 : pos.x + 18
+  // Sense panel — flip side based on canvas position
+  const panelW = 194
+  const panelX = pos.x > canvasW / 2 ? pos.x - panelW - 20 : pos.x + 20
   drawSensePanel(ctx, probe, panelX, pos.y - 10)
 }
 
-const PANEL_LINE = 15
-const PANEL_PAD  = 9
+const PANEL_LINE = 17
+const PANEL_PAD  = 10
 
 function drawSensePanel(
-  ctx:    CanvasRenderingContext2D,
-  probe:  ProbeState,
-  px:     number,
-  py:     number,
+  ctx:   CanvasRenderingContext2D,
+  probe: ProbeState,
+  px:    number,
+  py:    number,
 ): void {
   const { sense } = probe
-  const lines: Array<{ text: string; color: string; alpha?: number }> = []
+  type Line = { text: string; color: string }
+  const lines: Line[] = []
 
-  lines.push({ text: `node ${probe.nodeId}`, color: '#aaaacc' })
-  lines.push({ text: '', color: '#000' })
+  lines.push({ text: `node ${probe.nodeId}`, color: '#ccccee' })
+  lines.push({ text: '', color: '' })
 
-  // Local density bar (8 segments)
-  const barLen  = 8
-  const filled  = Math.round(Math.min(sense.localDensity, 1) * barLen)
-  const bar     = '█'.repeat(filled) + '░'.repeat(barLen - filled)
-  const rhoVal  = sense.localDensity.toFixed(3)
-  lines.push({ text: `ρ  ${bar}  ${rhoVal}`, color: '#8888bb' })
-  lines.push({ text: '', color: '#000' })
+  // Local density bar
+  const barLen = 8
+  const filled = Math.round(Math.min(sense.localDensity, 1) * barLen)
+  const bar    = '█'.repeat(filled) + '░'.repeat(barLen - filled)
+  lines.push({ text: `ρ  ${bar}  ${sense.localDensity.toFixed(3)}`, color: '#aab8dd' })
+  lines.push({ text: '', color: '' })
 
   // Frontier proximity
   if (sense.frontierProximity.length === 0) {
-    lines.push({ text: 'frontier  —', color: '#444466' })
+    lines.push({ text: 'frontier  —', color: '#7777aa' })
   } else {
     for (const fp of sense.frontierProximity) {
       const pal   = MODEL_PALETTE[fp.modelType]
@@ -210,96 +210,115 @@ function drawSensePanel(
       lines.push({ text: `${fp.modelType}  ${label}`, color: pal.base })
     }
   }
-  lines.push({ text: '', color: '#000' })
+  lines.push({ text: '', color: '' })
 
   // Local I
   const iStr = sense.localI > 0 ? sense.localI.toFixed(1) : '—'
-  lines.push({ text: `I_local  ${iStr}`, color: '#ccaa44' })
+  lines.push({ text: `I_local  ${iStr}`, color: '#ffcc55' })
 
-  // Events
+  // Event flags
   if (sense.presentEvents.length > 0) {
-    lines.push({ text: '', color: '#000' })
+    lines.push({ text: '', color: '' })
     for (const kind of sense.presentEvents) {
-      const color = EVENT_FLASH[kind] ?? 'rgba(255,255,255,0.9)'
-      lines.push({ text: `⚡ ${kind}`, color })
+      const raw = EVENT_FLASH[kind] ?? 'rgba(255,255,255,0.9)'
+      lines.push({ text: `⚡ ${kind}`, color: rgbaToSolid(raw) })
     }
   }
 
-  // Panel background
+  // Navigation footer
+  const atLeaf = probe.successors.length === 0
+  if (atLeaf) {
+    lines.push({ text: '', color: '' })
+    lines.push({ text: '— end of path —', color: '#666688' })
+  }
+
+  // Background box
   const panelH = lines.length * PANEL_LINE + PANEL_PAD * 2
   ctx.save()
-  ctx.fillStyle   = 'rgba(4, 4, 14, 0.82)'
-  ctx.strokeStyle = 'rgba(255,255,255,0.12)'
+  ctx.fillStyle   = 'rgba(4, 4, 16, 0.84)'
+  ctx.strokeStyle = 'rgba(255,255,255,0.14)'
   ctx.lineWidth   = 0.8
   ctx.beginPath()
-  ctx.roundRect(px, py, 180, panelH, 4)
+  ctx.roundRect(px, py, 194, panelH, 4)
   ctx.fill()
   ctx.stroke()
   ctx.restore()
 
-  // Panel text
+  // Text
   ctx.save()
-  ctx.font        = '10px "Courier New", monospace'
-  ctx.globalAlpha = 0.9
-  let ty = py + PANEL_PAD + 10
+  ctx.font        = 'bold 11px "Courier New", monospace'
+  ctx.globalAlpha = 0.95
+  let ty = py + PANEL_PAD + 11
   for (const line of lines) {
-    if (line.text === '') { ty += PANEL_LINE * 0.4; continue }
-    // Strip rgba/color alpha so we can use it for fillStyle
-    ctx.fillStyle = line.color.startsWith('rgba') ? extractSolidColor(line.color) : line.color
+    if (!line.text) { ty += PANEL_LINE * 0.35; continue }
+    ctx.fillStyle = line.color
     ctx.fillText(line.text, px + PANEL_PAD, ty)
     ty += PANEL_LINE
   }
   ctx.restore()
 }
 
-/** Convert rgba(...) string to a visible solid color for canvas fillStyle. */
-function extractSolidColor(rgba: string): string {
+function rgbaToSolid(rgba: string): string {
   const m = rgba.match(/rgba\(\s*(\d+),\s*(\d+),\s*(\d+)/)
-  if (!m) return rgba
-  return `rgb(${m[1]},${m[2]},${m[3]})`
+  return m ? `rgb(${m[1]},${m[2]},${m[3]})` : rgba
 }
 
 // ── Global HUD ────────────────────────────────────────────────────────────────
 
-function drawHUD(ctx: CanvasRenderingContext2D, es: EcosystemState): void {
+function drawHUD(
+  ctx:      CanvasRenderingContext2D,
+  es:       EcosystemState,
+  isPaused: boolean,
+  canvasH:  number,
+): void {
   ctx.save()
-  ctx.font        = '11px "Courier New", monospace'
-  ctx.globalAlpha = 0.78
+  ctx.font        = 'bold 13px "Courier New", monospace'
+  ctx.globalAlpha = 0.95
 
-  let y = 22
-  const x     = 14
-  const lineH = 16
+  let y = 24
+  const x     = 16
+  const lineH = 19
+
+  // Step + run state
+  let statusTag: string
+  if (!es.running)       statusTag = '  [done]'
+  else if (isPaused)     statusTag = '  [paused]'
+  else                   statusTag = '  [playing]'
 
   ctx.fillStyle = '#ffffff'
-  ctx.fillText(`n = ${es.step}${es.running ? '' : '  [done]'}`, x, y)
+  ctx.fillText(`n = ${es.step}${statusTag}`, x, y)
   y += lineH + 6
 
+  // Per-model status
   for (const m of es.models.values()) {
     const pal = MODEL_PALETTE[m.type]
-    ctx.fillStyle = pal.base
     if (m.active) {
+      ctx.globalAlpha = 0.95
+      ctx.fillStyle   = pal.base
       ctx.fillText(`${m.type}  I=${m.I.toFixed(1)}  deg=${m.degree}`, x, y)
     } else {
-      ctx.globalAlpha = 0.42
+      ctx.globalAlpha = 0.5
+      ctx.fillStyle   = pal.base
       ctx.fillText(`${m.type}  ${m.terminationMode ?? '?'} @ n=${m.terminationStep}`, x, y)
-      ctx.globalAlpha = 0.78
+      ctx.globalAlpha = 0.95
     }
     y += lineH
   }
 
-  y += 8
+  // Substrate
+  y += 6
   const d = density(es.substrate)
-  ctx.fillStyle = '#8888bb'
+  ctx.fillStyle = '#aabbdd'
   ctx.fillText(
     `substrate  L=${es.substrate.records.length}  ρ=${d.toFixed(3)}  merges=${es.substrate.mergeCount}`,
     x, y,
   )
 
-  // Key hints at bottom-left
-  const { height } = ctx.canvas
-  ctx.globalAlpha = 0.35
+  // Key hints
+  ctx.font        = 'bold 11px "Courier New", monospace'
+  ctx.globalAlpha = 0.42
   ctx.fillStyle   = '#ffffff'
-  ctx.fillText('SPC/↓ advance  ←/→ branch  TAB jump cluster  R restart', x, height - 12)
+  ctx.fillText('SPC step  P play/pause  ↑↓ probe  ←→ cluster  R restart', x, canvasH - 14)
 
   ctx.restore()
 }

@@ -14,9 +14,10 @@ export interface ProbeSense {
 }
 
 export interface ProbeState {
-  nodeId:     number
-  sense:      ProbeSense
-  successors: number[]   // valid forward moves from current position
+  nodeId:       number
+  sense:        ProbeSense
+  successors:   number[]   // valid forward moves
+  predecessors: number[]   // valid backward moves
 }
 
 const NULL_SENSE: ProbeSense = {
@@ -27,27 +28,25 @@ const NULL_SENSE: ProbeSense = {
 }
 
 export function makeProbe(entryNode: number): ProbeState {
-  return { nodeId: entryNode, sense: NULL_SENSE, successors: [] }
+  return { nodeId: entryNode, sense: NULL_SENSE, successors: [], predecessors: [] }
 }
 
-/** Recompute sense + successors from the current ecosystem state. Non-mutating. */
+/** Recompute sense + navigation options. Non-mutating. */
 export function refreshProbe(
   probe: ProbeState,
   es:    EcosystemState,
   nodes: DAGNode[],
 ): ProbeState {
+  const node = nodes[probe.nodeId]
   return {
     ...probe,
-    sense:      computeSense(probe.nodeId, es, nodes),
-    successors: nodes[probe.nodeId]?.successors.slice() ?? [],
+    sense:        computeSense(probe.nodeId, es, nodes),
+    successors:   node?.successors.slice()   ?? [],
+    predecessors: node?.predecessors.slice() ?? [],
   }
 }
 
-/**
- * Move probe forward to targetId.  Returns updated probe if targetId is a
- * valid successor; returns null if the move is illegal (not a forward edge).
- * The probe is massless — no substrate writes occur.
- */
+/** Move forward to a successor. Returns null if targetId is not a valid forward edge. */
 export function moveProbe(
   probe:    ProbeState,
   targetId: number,
@@ -58,14 +57,25 @@ export function moveProbe(
   return refreshProbe({ ...probe, nodeId: targetId }, es, nodes)
 }
 
-/** Teleport to any entry node (Tab / cluster jump).  Not a DAG edge. */
+/** Move backward to a predecessor. Returns null if already at an entry node. */
+export function moveProbeBack(
+  probe: ProbeState,
+  es:    EcosystemState,
+  nodes: DAGNode[],
+): ProbeState | null {
+  if (probe.predecessors.length === 0) return null
+  const targetId = probe.predecessors[0]!  // first predecessor (deterministic)
+  return refreshProbe({ ...probe, nodeId: targetId }, es, nodes)
+}
+
+/** Teleport to any node (cross-cluster lateral jump). Not constrained to edges. */
 export function jumpProbe(
-  probe:     ProbeState,
-  entryNode: number,
-  es:        EcosystemState,
-  nodes:     DAGNode[],
+  probe:    ProbeState,
+  targetId: number,
+  es:       EcosystemState,
+  nodes:    DAGNode[],
 ): ProbeState {
-  return refreshProbe({ ...probe, nodeId: entryNode }, es, nodes)
+  return refreshProbe({ ...probe, nodeId: targetId }, es, nodes)
 }
 
 // ── Sense computation ─────────────────────────────────────────────────────────
@@ -75,7 +85,6 @@ function computeSense(
   es:     EcosystemState,
   nodes:  DAGNode[],
 ): ProbeSense {
-  // Local substrate density: records referencing this node / capacity
   const recordsHere = es.substrate.records.filter(r => r.nodeId === nodeId).length
   const localDensity = recordsHere / es.substrate.C
 
@@ -100,16 +109,12 @@ function computeSense(
     }
   }
 
-  // Events that fired at this node during the current step
   const presentEvents: EventKind[] = []
   for (const ev of es.events) {
     if (ev.step !== es.step) continue
     const model = es.models.get(ev.modelId)
     if (!model) continue
-    // Match if the model's frontier (preserved even after termination) includes probe node
-    if (model.frontier.includes(nodeId)) {
-      presentEvents.push(ev.kind)
-    }
+    if (model.frontier.includes(nodeId)) presentEvents.push(ev.kind)
   }
 
   return { localDensity, frontierProximity, localI, presentEvents }
