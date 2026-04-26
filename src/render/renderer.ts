@@ -1,6 +1,7 @@
 import type { DAGNode, EcosystemState } from '../types.js'
 import type { LayoutMap } from './layout.js'
-import { MODEL_PALETTE } from './palette.js'
+import type { ProbeState } from '../probe.js'
+import { MODEL_PALETTE, EVENT_FLASH } from './palette.js'
 import { density } from '../engine/substrate.js'
 
 export interface FlashOverlay {
@@ -15,6 +16,7 @@ export interface RenderState {
   nodes:          DAGNode[]
   layout:         LayoutMap
   flashes:        FlashOverlay[]
+  probe:          ProbeState
 }
 
 const R_NODE     = 5
@@ -25,10 +27,10 @@ export function renderFrame(
   ctx: CanvasRenderingContext2D,
   rs: RenderState,
 ): void {
-  const { ecosystemState: es, nodes, layout, flashes } = rs
+  const { ecosystemState: es, nodes, layout, flashes, probe } = rs
   const { width, height } = ctx.canvas
 
-  // Background with density-driven ambient
+  // Background — darkens / lightens with global substrate density
   ctx.fillStyle = '#08080f'
   ctx.fillRect(0, 0, width, height)
 
@@ -45,15 +47,15 @@ export function renderFrame(
     ctx.fillRect(0, 0, width, height)
   }
 
-  // Build per-node model lookups
-  const visitedBy  = new Map<number, string>()  // nodeId → modelType (last writer wins)
-  const frontierOf = new Map<number, string>()  // nodeId → modelType
+  // Per-node model lookups
+  const visitedBy  = new Map<number, string>()
+  const frontierOf = new Map<number, string>()
   for (const m of es.models.values()) {
     for (const nid of m.visited)  visitedBy.set(nid, m.type)
     for (const nid of m.frontier) frontierOf.set(nid, m.type)
   }
 
-  // Edges
+  // ── Edges ────────────────────────────────────────────────────────────────────
   ctx.save()
   for (const node of nodes) {
     const from = layout.get(node.id)
@@ -72,7 +74,7 @@ export function renderFrame(
   }
   ctx.restore()
 
-  // Nodes
+  // ── Nodes ────────────────────────────────────────────────────────────────────
   for (const node of nodes) {
     const pos = layout.get(node.id)
     if (!pos) continue
@@ -83,7 +85,6 @@ export function renderFrame(
     if (fModel) {
       const pal = MODEL_PALETTE[fModel as keyof typeof MODEL_PALETTE]
       if (!pal) continue
-      // Glow fill
       ctx.save()
       ctx.shadowBlur  = GLOW_BLUR
       ctx.shadowColor = pal.glow
@@ -92,11 +93,10 @@ export function renderFrame(
       ctx.arc(pos.x, pos.y, R_FRONTIER, 0, Math.PI * 2)
       ctx.fill()
       ctx.restore()
-      // Outer pulse ring
       ctx.save()
-      ctx.strokeStyle  = pal.base
-      ctx.lineWidth    = 1.5
-      ctx.globalAlpha  = 0.45
+      ctx.strokeStyle = pal.base
+      ctx.lineWidth   = 1.5
+      ctx.globalAlpha = 0.45
       ctx.beginPath()
       ctx.arc(pos.x, pos.y, R_FRONTIER + 6, 0, Math.PI * 2)
       ctx.stroke()
@@ -121,9 +121,9 @@ export function renderFrame(
     }
   }
 
-  // Flash overlays — expand + fade rings
+  // ── Flash overlays ───────────────────────────────────────────────────────────
   for (const flash of flashes) {
-    const alpha = flash.ttl / flash.maxTtl
+    const alpha  = flash.ttl / flash.maxTtl
     const expand = R_FRONTIER + 18 * (1 - alpha)
     ctx.save()
     ctx.globalAlpha = alpha * 0.9
@@ -139,9 +139,127 @@ export function renderFrame(
     ctx.restore()
   }
 
-  // HUD
+  // ── Probe marker + sense panel ───────────────────────────────────────────────
+  drawProbe(ctx, probe, layout, width)
+
+  // ── Global HUD ───────────────────────────────────────────────────────────────
   drawHUD(ctx, es)
 }
+
+// ── Probe ─────────────────────────────────────────────────────────────────────
+
+function drawProbe(
+  ctx:    CanvasRenderingContext2D,
+  probe:  ProbeState,
+  layout: LayoutMap,
+  canvasW: number,
+): void {
+  const pos = layout.get(probe.nodeId)
+  if (!pos) return
+
+  // White crosshair ring at probe location
+  ctx.save()
+  ctx.strokeStyle = 'rgba(255,255,255,0.9)'
+  ctx.lineWidth   = 1.5
+  ctx.beginPath()
+  ctx.arc(pos.x, pos.y, R_FRONTIER + 4, 0, Math.PI * 2)
+  ctx.stroke()
+  // Small inner dot
+  ctx.fillStyle = 'rgba(255,255,255,0.7)'
+  ctx.beginPath()
+  ctx.arc(pos.x, pos.y, 2.5, 0, Math.PI * 2)
+  ctx.fill()
+  ctx.restore()
+
+  // Sense panel — offset left if probe is in right half of canvas
+  const panelW  = 180
+  const panelX  = pos.x > canvasW / 2 ? pos.x - panelW - 18 : pos.x + 18
+  drawSensePanel(ctx, probe, panelX, pos.y - 10)
+}
+
+const PANEL_LINE = 15
+const PANEL_PAD  = 9
+
+function drawSensePanel(
+  ctx:    CanvasRenderingContext2D,
+  probe:  ProbeState,
+  px:     number,
+  py:     number,
+): void {
+  const { sense } = probe
+  const lines: Array<{ text: string; color: string; alpha?: number }> = []
+
+  lines.push({ text: `node ${probe.nodeId}`, color: '#aaaacc' })
+  lines.push({ text: '', color: '#000' })
+
+  // Local density bar (8 segments)
+  const barLen  = 8
+  const filled  = Math.round(Math.min(sense.localDensity, 1) * barLen)
+  const bar     = '█'.repeat(filled) + '░'.repeat(barLen - filled)
+  const rhoVal  = sense.localDensity.toFixed(3)
+  lines.push({ text: `ρ  ${bar}  ${rhoVal}`, color: '#8888bb' })
+  lines.push({ text: '', color: '#000' })
+
+  // Frontier proximity
+  if (sense.frontierProximity.length === 0) {
+    lines.push({ text: 'frontier  —', color: '#444466' })
+  } else {
+    for (const fp of sense.frontierProximity) {
+      const pal   = MODEL_PALETTE[fp.modelType]
+      const label = fp.distance === 0 ? '[here]' : '[near]'
+      lines.push({ text: `${fp.modelType}  ${label}`, color: pal.base })
+    }
+  }
+  lines.push({ text: '', color: '#000' })
+
+  // Local I
+  const iStr = sense.localI > 0 ? sense.localI.toFixed(1) : '—'
+  lines.push({ text: `I_local  ${iStr}`, color: '#ccaa44' })
+
+  // Events
+  if (sense.presentEvents.length > 0) {
+    lines.push({ text: '', color: '#000' })
+    for (const kind of sense.presentEvents) {
+      const color = EVENT_FLASH[kind] ?? 'rgba(255,255,255,0.9)'
+      lines.push({ text: `⚡ ${kind}`, color })
+    }
+  }
+
+  // Panel background
+  const panelH = lines.length * PANEL_LINE + PANEL_PAD * 2
+  ctx.save()
+  ctx.fillStyle   = 'rgba(4, 4, 14, 0.82)'
+  ctx.strokeStyle = 'rgba(255,255,255,0.12)'
+  ctx.lineWidth   = 0.8
+  ctx.beginPath()
+  ctx.roundRect(px, py, 180, panelH, 4)
+  ctx.fill()
+  ctx.stroke()
+  ctx.restore()
+
+  // Panel text
+  ctx.save()
+  ctx.font        = '10px "Courier New", monospace'
+  ctx.globalAlpha = 0.9
+  let ty = py + PANEL_PAD + 10
+  for (const line of lines) {
+    if (line.text === '') { ty += PANEL_LINE * 0.4; continue }
+    // Strip rgba/color alpha so we can use it for fillStyle
+    ctx.fillStyle = line.color.startsWith('rgba') ? extractSolidColor(line.color) : line.color
+    ctx.fillText(line.text, px + PANEL_PAD, ty)
+    ty += PANEL_LINE
+  }
+  ctx.restore()
+}
+
+/** Convert rgba(...) string to a visible solid color for canvas fillStyle. */
+function extractSolidColor(rgba: string): string {
+  const m = rgba.match(/rgba\(\s*(\d+),\s*(\d+),\s*(\d+)/)
+  if (!m) return rgba
+  return `rgb(${m[1]},${m[2]},${m[3]})`
+}
+
+// ── Global HUD ────────────────────────────────────────────────────────────────
 
 function drawHUD(ctx: CanvasRenderingContext2D, es: EcosystemState): void {
   ctx.save()
@@ -149,7 +267,7 @@ function drawHUD(ctx: CanvasRenderingContext2D, es: EcosystemState): void {
   ctx.globalAlpha = 0.78
 
   let y = 22
-  const x    = 14
+  const x     = 14
   const lineH = 16
 
   ctx.fillStyle = '#ffffff'
@@ -162,7 +280,7 @@ function drawHUD(ctx: CanvasRenderingContext2D, es: EcosystemState): void {
     if (m.active) {
       ctx.fillText(`${m.type}  I=${m.I.toFixed(1)}  deg=${m.degree}`, x, y)
     } else {
-      ctx.globalAlpha = 0.45
+      ctx.globalAlpha = 0.42
       ctx.fillText(`${m.type}  ${m.terminationMode ?? '?'} @ n=${m.terminationStep}`, x, y)
       ctx.globalAlpha = 0.78
     }
@@ -176,6 +294,12 @@ function drawHUD(ctx: CanvasRenderingContext2D, es: EcosystemState): void {
     `substrate  L=${es.substrate.records.length}  ρ=${d.toFixed(3)}  merges=${es.substrate.mergeCount}`,
     x, y,
   )
+
+  // Key hints at bottom-left
+  const { height } = ctx.canvas
+  ctx.globalAlpha = 0.35
+  ctx.fillStyle   = '#ffffff'
+  ctx.fillText('SPC/↓ advance  ←/→ branch  TAB jump cluster  R restart', x, height - 12)
 
   ctx.restore()
 }
