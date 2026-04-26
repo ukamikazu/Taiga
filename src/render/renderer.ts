@@ -2,6 +2,7 @@ import type { DAGNode, EcosystemState } from '../types.js'
 import type { LayoutMap } from './layout.js'
 import type { ProbeState } from '../probe.js'
 import type { NestedTaigaState } from '../nested/nestedTaiga.js'
+import type { Particle } from './particles.js'
 import { MODEL_PALETTE, EVENT_FLASH } from './palette.js'
 import { nestedDensity } from '../nested/nestedTaiga.js'
 import { density } from '../engine/substrate.js'
@@ -34,6 +35,7 @@ export interface RenderState {
   nestedTaigas:   NestedTaigaState[]
   edgeLuminosity: Map<string, number>      // 'fromId-toId' → 0..1 brightness
   shockwaves:     Shockwave[]
+  particles:      Particle[]
 }
 
 const R_NODE     = 5
@@ -186,6 +188,19 @@ export function renderFrame(
     ctx.stroke()
     ctx.restore()
   }
+
+  // ── Particles ────────────────────────────────────────────────────────────────
+  ctx.save()
+  for (const p of rs.particles) {
+    const alpha = (p.life / p.maxLife) * 0.75
+    const size  = Math.max(0.3, p.size * (p.life / p.maxLife))
+    ctx.globalAlpha = alpha
+    ctx.fillStyle   = p.color
+    ctx.beginPath()
+    ctx.arc(p.x, p.y, size, 0, Math.PI * 2)
+    ctx.fill()
+  }
+  ctx.restore()
 
   // ── Dodecagons (nested Taigas) ────────────────────────────────────────────────
   for (const t of rs.nestedTaigas) drawDodecagon(ctx, t)

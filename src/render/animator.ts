@@ -16,6 +16,13 @@ import {
 } from '../nested/nestedTaiga.js'
 import { layoutDAG, type LayoutMap } from './layout.js'
 import { EVENT_FLASH, NESTED_ACCENTS, GREEK_LETTERS } from './palette.js'
+import {
+  type Particle,
+  MAX_PARTICLES,
+  updateParticles,
+  emitParticles,
+  dissolveModel,
+} from './particles.js'
 import { type FlashOverlay, type Shockwave, type RenderState, renderFrame } from './renderer.js'
 
 export interface AnimatorOptions {
@@ -45,6 +52,7 @@ export function createAnimator(opts: AnimatorOptions): Animator {
   let flashes: FlashOverlay[]         = []
   let nestedTaigas: NestedTaigaState[]= []
   let shockwaves: Shockwave[]         = []
+  let particles: Particle[]           = []
   let edgeLuminosity                  = new Map<string, number>()
   let breathePhase = 0
   let lastTickMs   = 0
@@ -94,6 +102,12 @@ export function createAnimator(opts: AnimatorOptions): Animator {
         nodeIds = model ? [...model.frontier] : []
       }
       if (nodeIds.length > 0) flashes.push({ nodeIds, color, ttl: 14, maxTtl: 14 })
+
+      // Uncon / Severance → dissolve burst
+      if (ev.kind === 'Uncon' || ev.kind === 'Severance') {
+        const model = ecosystemState.models.get(ev.modelId)
+        if (model) dissolveModel(model, ev.kind === 'Severance', layout, particles)
+      }
 
       // ModuleBirth → spawn nested Taiga + shockwave
       if (ev.kind === 'ModuleBirth' && nestedTaigas.length < GREEK_LETTERS.length) {
@@ -229,6 +243,14 @@ export function createAnimator(opts: AnimatorOptions): Animator {
         .map(s => ({ ...s, radius: s.radius + s.maxRadius / 60, ttl: s.ttl - 1 }))
         .filter(s => s.ttl > 0)
 
+      // Per-frame: particle emission from active frontiers
+      for (const m of ecosystemState.models.values()) {
+        if (!m.active) continue
+        emitParticles(m, ecosystemState.engine.nabla, layout, particles)
+      }
+      particles = updateParticles(particles)
+      if (particles.length > MAX_PARTICLES) particles = particles.slice(-MAX_PARTICLES)
+
       // Per-frame: dodecagon drift + rotation + birth animation
       const parentDone = !ecosystemState.running
       nestedTaigas = nestedTaigas.map(t => updateDodecagonFrame(t, parentDone, canvas.width, canvas.height))
@@ -242,7 +264,7 @@ export function createAnimator(opts: AnimatorOptions): Animator {
 
     const rs: RenderState = {
       ecosystemState, nodes, layout, flashes, probe, isPaused,
-      breathePhase, nestedTaigas, edgeLuminosity, shockwaves,
+      breathePhase, nestedTaigas, edgeLuminosity, shockwaves, particles,
     }
     renderFrame(ctx, rs)
 
@@ -258,6 +280,7 @@ export function createAnimator(opts: AnimatorOptions): Animator {
     flashes        = []
     nestedTaigas   = []
     shockwaves     = []
+    particles      = []
     edgeLuminosity.clear()
     breathePhase   = 0
     isPaused       = true
