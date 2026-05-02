@@ -538,9 +538,9 @@ footer {
   <p>The simulation you can explore here makes this visible. You move through a living Taiga as a <strong>massless witness</strong> — observing phenomena as they unfold around you, feeling the substrate grow heavier as models compete for record space, watching a nested universe crystallise while the parent universe continues its own life around it.</p>
 
   <h3>The Models</h3>
-  <p>Four model types inhabit the simulation, each with distinct behaviour derived from formal lock-down definitions:</p>
+  <p>Eight model types inhabit the full Taiga developmental lineage, four of which are currently simulated. The remaining four are in active development.</p>
 
-  <div class="model-legend">
+  <div class="model-legend" style="grid-template-columns:repeat(4,1fr)">
     <div class="model-entry">
       <div class="model-dot" style="background:var(--teal)"></div>
       <h4 class="c-teal">Model-011</h4>
@@ -554,12 +554,36 @@ footer {
     <div class="model-entry">
       <div class="model-dot" style="background:var(--violet)"></div>
       <h4 class="c-violet">Model-j2</h4>
-      <p>Dimensional architect. Bifurcates on odd steps, reconverges on even. Its conclusion is not death — it is the birth of a new universe.</p>
+      <p>Dimensional architect. Bifurcates on odd steps, reconverges on even. Its conclusion is the birth of a new universe.</p>
     </div>
     <div class="model-entry">
       <div class="model-dot" style="background:var(--rose)"></div>
       <h4 class="c-rose">Model-I/1</h4>
       <p>Apex predator. Three-appendage wavefront. Consumes the partial pasts of lower-phase models. Exits via source severance.</p>
+    </div>
+  </div>
+
+  <p style="font-family:var(--mono);font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold-dim);margin:32px 0 12px">In Development</p>
+  <div class="model-legend" style="grid-template-columns:repeat(4,1fr)">
+    <div class="model-entry" style="opacity:0.7">
+      <div class="model-dot" style="background:#7ec87e"></div>
+      <h4 style="color:#7ec87e">Model-A/B</h4>
+      <p>Early consumers. Gradually transforms from A to B through consumption of the ambient Model-00 field. B is assimilated by 011, giving rise to C.</p>
+    </div>
+    <div class="model-entry" style="opacity:0.7">
+      <div class="model-dot" style="background:#4db89e"></div>
+      <h4 style="color:#4db89e">Model-C</h4>
+      <p>The abstractor. Emerges from B's assimilation by 011, inheriting a wellspring of abstractions. Climbs the Con tower from a head-start.</p>
+    </div>
+    <div class="model-entry" style="opacity:0.7">
+      <div class="model-dot" style="background:#d4884a"></div>
+      <h4 style="color:#d4884a">Model-D</h4>
+      <p>The chrysalis. Detaches from the concept plane, moves freely regardless of parity, accumulates bifurcation pressure until it splits into two F instances.</p>
+    </div>
+    <div class="model-entry" style="opacity:0.7">
+      <div class="model-dot" style="background:#c8c8d4"></div>
+      <h4 style="color:#c8c8d4">Model-J1</h4>
+      <p>Temporal anchor. Spatially fixed at the severance node. Creates new time axes, brightening its node as temporal records accumulate. J2's sibling.</p>
     </div>
   </div>
 
@@ -582,11 +606,11 @@ footer {
   <table class="controls-table">
     <tr><th>Key</th><th>Action</th></tr>
     <tr><td>SPACE</td><td>Advance simulation one step manually</td></tr>
-    <tr><td>P</td><td>Toggle auto-play / pause. During post-run drift, pauses the nested Taigas.</td></tr>
-    <tr><td>↑ / ↓</td><td>Move probe forward / backward through the DAG</td></tr>
-    <tr><td>← / →</td><td>Move probe laterally between columns</td></tr>
-    <tr><td>TAB</td><td>Step back through history (undo one simulation step)</td></tr>
-    <tr><td>R</td><td>Restart the simulation completely</td></tr>
+    <tr><td>P</td><td>Toggle auto-play / pause. After the run ends, pauses or releases the drifting nested Taigas.</td></tr>
+    <tr><td>↑ / ↓</td><td>Move probe forward / backward along DAG edges</td></tr>
+    <tr><td>← / →</td><td>Move probe laterally between model columns</td></tr>
+    <tr><td>TAB</td><td>Step back through history — undo one simulation step and return to the previous state</td></tr>
+    <tr><td>R</td><td>Restart the simulation completely, clearing all nested Taigas</td></tr>
   </table>
 
   <h3>What to Look For</h3>
@@ -674,7 +698,12 @@ footer {
   <div class="section-eyebrow">The Full Record</div>
   <h2>Documents &amp; Tools</h2>
 
-  <p>The simulation was built through a rigorous experimental programme — 35 confirmed findings, 19 experiments, an independent audit by a separate AI instance, and a complete canon document. All of it is available here.</p>
+  <p>The simulation was built through a rigorous experimental programme — 35 confirmed findings, 19 experiments, an independent pre-release audit, and a complete canon document now at v2.4. All of it is available here.</p>
+
+  <div style="background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--gold-dim);border-radius:4px;padding:20px 24px;margin-bottom:32px">
+    <div style="font-family:var(--mono);font-size:9px;letter-spacing:0.25em;text-transform:uppercase;color:var(--gold-dim);margin-bottom:10px">Project Status · Active Development</div>
+    <p style="font-size:15px;color:var(--ink-dim);margin:0">The simulation currently runs four model types (011, F, j2, I/1). Four additional models from the full Taiga developmental lineage (A/B, C, D, J1) are in active implementation. A collision experiment series (Section Y) and a full-lineage Great Experiment v2 are planned. The canon and notebook are updated as new findings are confirmed.</p>
+  </div>
 
   <div class="doc-grid">
     <div class="doc-card">
@@ -741,9 +770,9 @@ footer {
   <div class="section-eyebrow">About This Project</div>
   <h2>How This Was Made</h2>
 
-  <p>This simulation was built by <strong>Xiong Yimin (熊逸民)</strong> of The Bear Hermit Toy Bindery, in extended collaboration with Claude Sonnet (Anthropic) over the course of several sessions in early 2026.</p>
+  <p>This simulation was built by <strong>Xiong Yimin (熊逸民)</strong> of The Bear Hermit Toy Bindery, in extended collaboration with Claude Sonnet (Anthropic) over the course of several months in 2026.</p>
 
-  <p>The process: Unorthodox Kitten's framework was formalised mathematically, then subjected to a rigorous experimental programme modelled on scientific practice — control cases, isolated variables, a pre-flight audit by a separate AI instance (Claude Opus), and explicit acknowledgment of assumptions and open questions throughout. The game experience specification emerged from the experimental findings rather than being imposed on them.</p>
+  <p>The process: Unorthodox Kitten's framework was formalised mathematically, then subjected to a rigorous experimental programme modelled on scientific practice — control cases, isolated variables, a pre-flight audit by a separate AI instance (Claude Opus), and explicit acknowledgment of assumptions and open questions throughout. The experience specification emerged from the experimental findings rather than being imposed on them.</p>
 
   <p>The complete conversation history that produced the canon, notebook, and this companion guide — including the audit, all experimental results, and every design decision — runs to several hundred thousand words. The laboratory notebook preserves the essential experimental record in interactive form.</p>
 
@@ -752,7 +781,7 @@ footer {
     <div style="margin-top:8px;font-size:13px;font-style:normal;color:var(--ink-faint);font-family:var(--mono)">— Chapter XIV, Taiga Canon v2.4</div>
   </div>
 
-  <p>The simulation runs entirely in the browser. No data is collected. No accounts are required. The source code will be made available on GitHub.</p>
+  <p>Development is ongoing. Four additional model types (A/B, C, D, J1) are in active implementation. A collision experiment series and a full-lineage Great Experiment are planned. The simulation runs entirely in the browser — no data is collected, no accounts required. Source code is MIT licensed on GitHub.</p>
 </section>
 </div>
 
