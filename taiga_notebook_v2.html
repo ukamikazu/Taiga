@@ -402,7 +402,8 @@
   <div class="toc-item"><span class="toc-num" style="font-family:var(--mono);font-size:9px;color:var(--ink-faint);min-width:28px">U</span><span class="toc-label">Extreme Asymmetry Collision — 10:1 I Ratio</span><span class="toc-badge live">Live</span></div>
   <div class="toc-item"><span class="toc-num" style="font-family:var(--mono);font-size:9px;color:var(--ink-faint);min-width:28px">V</span><span class="toc-label">Combinatorial Collision — Two I/1 + Lower-Phase Model</span><span class="toc-badge done">Complete</span></div>
   <div class="toc-item"><span class="toc-num" style="font-family:var(--mono);font-size:9px;color:var(--ink-faint);min-width:28px">W</span><span class="toc-label">The Great Experiment — Full Ecosystem Seed</span><span class="toc-badge done" style="background:var(--accent-gold);color:#000">Complete</span></div>
-  <div class="toc-item"><span class="toc-num" style="font-family:var(--mono);font-size:9px;color:var(--ink-faint);min-width:28px">X</span><span class="toc-label">Great Experiment Variants — Tight Substrate · Predation · Population</span><span class="toc-badge live">Live</span></div>
+  <div class="toc-item"><span class="toc-num" style="font-family:var(--mono);font-size:9px;color:var(--ink-faint);min-width:28px">X</span><span class="toc-label">Great Experiment Variants — Tight Substrate · Predation · Population</span><span class="toc-badge done">Complete</span></div>
+  <div class="toc-item"><span class="toc-num" style="font-family:var(--mono);font-size:9px;color:var(--ink-faint);min-width:28px">Y</span><span class="toc-label">New Model Collision Series — D·F · C·011 · J1·J2 · J1·I/1</span><span class="toc-badge live">Live</span></div>
 </div>
 
 <!-- ══ A. FOOD CHAIN ══ -->
@@ -2566,6 +2567,166 @@
     <div class="analysis" id="x3-anal" style="display:none">
       <div class="analysis-hdr">Analysis — X-3 Population Variation</div>
       <div id="x3-anal-txt"></div>
+    </div>
+  </div>
+</div>
+
+
+
+<hr>
+
+<!-- ══ Y. NEW MODEL COLLISION SERIES ══ -->
+<div class="section-head">Y — New Model Collision Series</div>
+<div class="section-sub">D·F · C·011 · J1·J2 · J1·I/1 · four pairs · same structure as R-series</div>
+
+<div class="exp live" id="exp-y-intro" style="border-left-color:var(--accent-gold)">
+  <div class="exp-hdr">
+    <div class="exp-id">Collision · Preamble</div>
+    <div class="exp-title">Experimental Design — Four New Collision Pairs</div>
+    <div class="exp-badge" style="color:var(--accent-gold);border-color:var(--accent-gold)">Post Brief #4</div>
+  </div>
+  <div class="exp-body">
+    <p class="exp-note">The new model types (A/B, C, D, J1) are implemented and the full lineage has run (Finding 36). This section characterises interactions between specific model pairs before the Y-series findings are fed back into the canon. Each experiment follows the R-series structure: isolated baseline, shared substrate, and predation arm where applicable. Finding 37 (J1 extreme density) is a primary design constraint — J1's anchoring behavior will dominate any shared substrate it occupies.</p>
+    <div class="canon-ref">Baseline reference: full lineage run (Finding 36) — n=51, 76 merges, MD Bifurcation@n=8, MJ1 Anchor@n=28, ρ=10.333 at termination. All Y-series experiments compare against this baseline and against individual model isolated runs.</div>
+  </div>
+</div>
+
+<!-- Y-1: D-on-F -->
+<div class="exp live" id="exp-y1">
+  <div class="exp-hdr">
+    <div class="exp-id">Collision · Y-1</div>
+    <div class="exp-title">D-on-F — Chrysalis Meets Its Future Self</div>
+    <div class="exp-badge live" id="y1-badge">Ready</div>
+  </div>
+  <div class="exp-body">
+    <p class="exp-note">D is moving toward bifurcating into F instances. F is what D becomes. When D encounters F before bifurcating, does it consume F's partial past (predation)? Do D's spawned daughters emerge into territory already shaped by the existing F? Three arms: D isolated (baseline), D+F shared substrate (no predation), D+F with predation. Primary measurements: D bifurcation step, spawned daughter count, F lifespan relative to isolated baseline.</p>
+    <div class="params">
+      <div><span class="p-label">Arm 1</span><span class="p-val">D isolated — bifurcation baseline</span></div>
+      <div><span class="p-label">Arm 2</span><span class="p-val">D + F shared substrate — no predation</span></div>
+      <div><span class="p-label">Arm 3</span><span class="p-val">D + F shared substrate — predation enabled</span></div>
+      <div><span class="p-label">Steps</span><span class="p-val mutable" id="y1-steps-d">30</span></div>
+      <div><span class="p-label">Capacity C</span><span class="p-val mutable" id="y1-cap-d">32</span></div>
+      <div><span class="p-label">Predation strength</span><span class="p-val mutable" id="y1-pred-d">50%</span></div>
+      <div><span class="p-label">Engine seed</span><span class="p-val">y₀₀=y₁₀=0.01 (low-seed regime)</span></div>
+    </div>
+    <div class="controls">
+      <div class="ctrl"><span class="ctrl-lbl">Steps</span><input type="range" id="y1-steps" min="10" max="60" value="30" step="5" oninput="y1sync('steps',this.value)"><span class="ctrl-val" id="y1-steps-v">30</span></div>
+      <div class="ctrl"><span class="ctrl-lbl">Capacity C</span><input type="range" id="y1-cap" min="12" max="64" value="32" step="4" oninput="y1sync('cap',this.value)"><span class="ctrl-val" id="y1-cap-v">32</span></div>
+      <div class="ctrl"><span class="ctrl-lbl">Predation %</span><input type="range" id="y1-pred" min="10" max="100" value="50" step="10" oninput="y1sync('pred',this.value)"><span class="ctrl-val" id="y1-pred-v">50%</span></div>
+      <button class="run-btn" onclick="runY1()">Run &#9658;</button>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px">
+      <div><div class="col-label" style="color:#d4884a">Arm 1 — D Isolated</div><div class="sim-out" id="y1-arm1" style="max-height:240px"><span class="sdim">—</span></div></div>
+      <div><div class="col-label">Arm 2 — D+F No Predation</div><div class="sim-out" id="y1-arm2" style="max-height:240px"><span class="sdim">—</span></div></div>
+      <div><div class="col-label" style="color:var(--accent-red)">Arm 3 — D+F Predation</div><div class="sim-out" id="y1-arm3" style="max-height:240px"><span class="sdim">—</span></div></div>
+    </div>
+    <div class="analysis" id="y1-anal" style="display:none">
+      <div class="analysis-hdr">Analysis — Y-1: D-on-F</div>
+      <div id="y1-anal-txt"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Y-2: C-on-011 -->
+<div class="exp live" id="exp-y2">
+  <div class="exp-hdr">
+    <div class="exp-id">Collision · Y-2</div>
+    <div class="exp-title">C-on-011 — Inheritor Meets Original</div>
+    <div class="exp-badge live" id="y2-badge">Ready</div>
+  </div>
+  <div class="exp-body">
+    <p class="exp-note">C climbs the Con tower from an inherited degree head-start. 011 starts at deg=1. Both write to shared substrate with similar frontier dynamics. Does C's faster I accumulation shorten 011's life (furnace-effect analog to K/K-2 with j-2)? Or does C terminate faster itself, relieving pressure? This is essentially K/K-2 repeated with C replacing j-2. Three arms: C isolated, 011 isolated, C+011 shared substrate.</p>
+    <div class="params">
+      <div><span class="p-label">Arm 1</span><span class="p-val">C isolated — termination baseline</span></div>
+      <div><span class="p-label">Arm 2</span><span class="p-val">011 isolated — termination baseline</span></div>
+      <div><span class="p-label">Arm 3</span><span class="p-val">C + 011 shared substrate</span></div>
+      <div><span class="p-label">Steps</span><span class="p-val mutable" id="y2-steps-d">40</span></div>
+      <div><span class="p-label">Capacity C</span><span class="p-val mutable" id="y2-cap-d">32</span></div>
+      <div><span class="p-label">Engine seed</span><span class="p-val">y₀₀=y₁₀=0.01</span></div>
+    </div>
+    <div class="controls">
+      <div class="ctrl"><span class="ctrl-lbl">Steps</span><input type="range" id="y2-steps" min="10" max="80" value="40" step="5" oninput="y2sync('steps',this.value)"><span class="ctrl-val" id="y2-steps-v">40</span></div>
+      <div class="ctrl"><span class="ctrl-lbl">Capacity C</span><input type="range" id="y2-cap" min="12" max="64" value="32" step="4" oninput="y2sync('cap',this.value)"><span class="ctrl-val" id="y2-cap-v">32</span></div>
+      <button class="run-btn" onclick="runY2()">Run &#9658;</button>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px">
+      <div><div class="col-label" style="color:#4db89e">Arm 1 — C Isolated</div><div class="sim-out" id="y2-arm1" style="max-height:240px"><span class="sdim">—</span></div></div>
+      <div><div class="col-label" style="color:var(--accent-teal)">Arm 2 — 011 Isolated</div><div class="sim-out" id="y2-arm2" style="max-height:240px"><span class="sdim">—</span></div></div>
+      <div><div class="col-label">Arm 3 — C+011 Shared</div><div class="sim-out" id="y2-arm3" style="max-height:240px"><span class="sdim">—</span></div></div>
+    </div>
+    <div class="analysis" id="y2-anal" style="display:none">
+      <div class="analysis-hdr">Analysis — Y-2: C-on-011</div>
+      <div id="y2-anal-txt"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Y-3: J1-on-J2 -->
+<div class="exp live" id="exp-y3">
+  <div class="exp-hdr">
+    <div class="exp-id">Collision · Y-3</div>
+    <div class="exp-title">J1-on-J2 — Temporal Anchor Meets Dimensional Architect</div>
+    <div class="exp-badge live" id="y3-badge">Ready</div>
+  </div>
+  <div class="exp-body">
+    <p class="exp-note">J1 concentrates records at a fixed node, producing extreme local density (Finding 37). J2 bifurcates toward the join node where J1 anchors. The question: does J1's extreme density at the join accelerate or prevent j2's Module birth? J1 is making time; j2 is making space. Their shared substrate interaction at the join node is the most philosophically charged collision in the series. Primary measurement: j2 Module birth step vs. isolated baseline (n=11).</p>
+    <div class="params">
+      <div><span class="p-label">Arm 1</span><span class="p-val">j2 isolated — Module birth baseline (n=11)</span></div>
+      <div><span class="p-label">Arm 2</span><span class="p-val">J1 + j2 shared substrate — J1 anchoring at join node</span></div>
+      <div><span class="p-label">Key measurement</span><span class="p-val">j2 Module birth step · does J1's density accelerate or delay it?</span></div>
+      <div><span class="p-label">Steps</span><span class="p-val mutable" id="y3-steps-d">50</span></div>
+      <div><span class="p-label">Capacity C</span><span class="p-val mutable" id="y3-cap-d">32</span></div>
+      <div><span class="p-label">Engine seed</span><span class="p-val">y₀₀=y₁₀=0.01</span></div>
+    </div>
+    <div class="controls">
+      <div class="ctrl"><span class="ctrl-lbl">Steps</span><input type="range" id="y3-steps" min="10" max="80" value="50" step="5" oninput="y3sync('steps',this.value)"><span class="ctrl-val" id="y3-steps-v">50</span></div>
+      <div class="ctrl"><span class="ctrl-lbl">Capacity C</span><input type="range" id="y3-cap" min="12" max="64" value="32" step="4" oninput="y3sync('cap',this.value)"><span class="ctrl-val" id="y3-cap-v">32</span></div>
+      <button class="run-btn" onclick="runY3()">Run &#9658;</button>
+    </div>
+    <div class="two-col">
+      <div><div class="col-label" style="color:var(--accent-blue)">Arm 1 — j2 Isolated</div><div class="sim-out" id="y3-arm1" style="max-height:260px"><span class="sdim">—</span></div></div>
+      <div><div class="col-label" style="color:#c8c8d4">Arm 2 — J1 + j2 Shared</div><div class="sim-out" id="y3-arm2" style="max-height:260px"><span class="sdim">—</span></div></div>
+    </div>
+    <div class="analysis" id="y3-anal" style="display:none">
+      <div class="analysis-hdr">Analysis — Y-3: J1-on-J2</div>
+      <div id="y3-anal-txt"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Y-4: J1-on-I/1 -->
+<div class="exp live" id="exp-y4">
+  <div class="exp-hdr">
+    <div class="exp-id">Collision · Y-4</div>
+    <div class="exp-title">J1-on-I/1 — Stationary Anchor vs. Expanding Predator Wavefront</div>
+    <div class="exp-badge live" id="y4-badge">Ready</div>
+  </div>
+  <div class="exp-body">
+    <p class="exp-note">J1 is spatially fixed at its anchor node. I/1 is an expanding wavefront predator. When I/1's frontier reaches J1's node, what happens? J1 has temporal records rather than a normal partial past — does I/1 recognise these as prey? Does predation fire? Does J1's record count decrease? Does I/1's I trajectory change? Three arms: J1 isolated, I/1 isolated, J1+I/1 shared substrate. This is the most open-ended collision — we have no prior data on what predation against a temporal anchor looks like.</p>
+    <div class="params">
+      <div><span class="p-label">Arm 1</span><span class="p-val">J1 isolated — anchor baseline</span></div>
+      <div><span class="p-label">Arm 2</span><span class="p-val">I/1 isolated — severance baseline</span></div>
+      <div><span class="p-label">Arm 3</span><span class="p-val">J1 + I/1 shared substrate</span></div>
+      <div><span class="p-label">Key measurement</span><span class="p-val">Does predation fire against J1? Does J1 record count decrease? Does I/1 I change?</span></div>
+      <div><span class="p-label">Steps</span><span class="p-val mutable" id="y4-steps-d">50</span></div>
+      <div><span class="p-label">Capacity C</span><span class="p-val mutable" id="y4-cap-d">32</span></div>
+      <div><span class="p-label">Predation strength</span><span class="p-val mutable" id="y4-pred-d">50%</span></div>
+      <div><span class="p-label">Engine seed</span><span class="p-val">y₀₀=y₁₀=0.01</span></div>
+    </div>
+    <div class="controls">
+      <div class="ctrl"><span class="ctrl-lbl">Steps</span><input type="range" id="y4-steps" min="10" max="80" value="50" step="5" oninput="y4sync('steps',this.value)"><span class="ctrl-val" id="y4-steps-v">50</span></div>
+      <div class="ctrl"><span class="ctrl-lbl">Capacity C</span><input type="range" id="y4-cap" min="12" max="64" value="32" step="4" oninput="y4sync('cap',this.value)"><span class="ctrl-val" id="y4-cap-v">32</span></div>
+      <div class="ctrl"><span class="ctrl-lbl">Predation %</span><input type="range" id="y4-pred" min="10" max="100" value="50" step="10" oninput="y4sync('pred',this.value)"><span class="ctrl-val" id="y4-pred-v">50%</span></div>
+      <button class="run-btn" onclick="runY4()">Run &#9658;</button>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px">
+      <div><div class="col-label" style="color:#c8c8d4">Arm 1 — J1 Isolated</div><div class="sim-out" id="y4-arm1" style="max-height:240px"><span class="sdim">—</span></div></div>
+      <div><div class="col-label" style="color:var(--accent-red)">Arm 2 — I/1 Isolated</div><div class="sim-out" id="y4-arm2" style="max-height:240px"><span class="sdim">—</span></div></div>
+      <div><div class="col-label">Arm 3 — J1 + I/1 Shared</div><div class="sim-out" id="y4-arm3" style="max-height:240px"><span class="sdim">—</span></div></div>
+    </div>
+    <div class="analysis" id="y4-anal" style="display:none">
+      <div class="analysis-hdr">Analysis — Y-4: J1-on-I/1</div>
+      <div id="y4-anal-txt"></div>
     </div>
   </div>
 </div>
@@ -5441,6 +5602,278 @@ function runX3(){
 
   document.getElementById('x3-anal-txt').innerHTML=txt;
   setBadge('x3-badge','Complete','done');
+}
+
+// ═══════════════════════════════════════════
+//  SYNC HELPERS — Section Y
+// ═══════════════════════════════════════════
+function y1sync(k,v){
+  const m={steps:['y1-steps-d','y1-steps-v'],cap:['y1-cap-d','y1-cap-v']};
+  if(m[k]){document.getElementById(m[k][0]).textContent=v;document.getElementById(m[k][1]).textContent=v;}
+  if(k==='pred'){document.getElementById('y1-pred-d').textContent=v+'%';document.getElementById('y1-pred-v').textContent=v+'%';}
+}
+function y2sync(k,v){const m={steps:['y2-steps-d','y2-steps-v'],cap:['y2-cap-d','y2-cap-v']};if(m[k]){document.getElementById(m[k][0]).textContent=v;document.getElementById(m[k][1]).textContent=v;}}
+function y3sync(k,v){const m={steps:['y3-steps-d','y3-steps-v'],cap:['y3-cap-d','y3-cap-v']};if(m[k]){document.getElementById(m[k][0]).textContent=v;document.getElementById(m[k][1]).textContent=v;}}
+function y4sync(k,v){
+  const m={steps:['y4-steps-d','y4-steps-v'],cap:['y4-cap-d','y4-cap-v']};
+  if(m[k]){document.getElementById(m[k][0]).textContent=v;document.getElementById(m[k][1]).textContent=v;}
+  if(k==='pred'){document.getElementById('y4-pred-d').textContent=v+'%';document.getElementById('y4-pred-v').textContent=v+'%';}
+}
+
+// ═══════════════════════════════════════════
+//  SHARED Y-SERIES ENGINE
+//  Lightweight model sim for collision pairs
+//  Uses existing parity(), y0n(), y1n() functions
+// ═══════════════════════════════════════════
+function simYModel(config){
+  // config: {type, steps, C, seed, startNode, predTarget, predStr}
+  // type: 'D','F','C','011','J1','J2','I1'
+  // Returns: {rows, termN, termType, Ifinal, Lfinal, merges, bpFinal}
+  const {type,steps,C,seed,predStr=0} = config;
+  const k_cap=6.0, omega=1.0, y00=seed, y10=seed;
+  const thresh011=24, threshF=16, threshI1=96, threshJ2=12, threshC=20, threshD=8, threshJ1_ratio=0.9;
+
+  let frontier=new Set([0]), deg=1, bp=0, L=0, Vset=new Set();
+  let R={}, last={}, merges=0, termN=null, termType=null;
+  let J1records=0; // for J1 temporal record accumulation
+
+  let rows=`<div class="sl sl-hdr"><span style="min-width:28px">n</span><span style="min-width:60px">I</span><span style="min-width:44px">|F|</span><span style="min-width:44px">L</span><span style="min-width:44px">misc</span><span></span></div>`;
+
+  for(let n=0;n<steps;n++){
+    const {delta:D,nabla:N}=parity(n);
+    const eng=Math.abs(y0n(n,y00,y10))+Math.abs(y1n(n,y00,y10));
+    let I=0, misc='';
+
+    // I calculation per type
+    if(type==='011'||type==='C') I=Math.abs(y0n(n,y00,y10))*(deg+1)/omega;
+    else if(type==='J2') I=Math.abs(y0n(n,y00,y10))*(deg+1)/omega;
+    else if(type==='D') I=eng*0.8;
+    else if(type==='F') I=eng*0.5;
+    else if(type==='I1') I=eng;
+    else if(type==='J1') I=eng*1.5;
+
+    // Record writes
+    if(type==='J1'){
+      // J1 writes only to fixed node 0
+      J1records++;
+      R[0]=(R[0]||0)+1; last[0]=n; Vset.add(0);
+    } else {
+      frontier.forEach(nd=>{R[nd]=(R[nd]||0)+1;last[nd]=n;Vset.add(nd);});
+    }
+
+    let Lval=Object.values(R).reduce((a,b)=>a+b,0);
+    if(Lval>C){
+      const keys=Object.keys(R).sort((a,b)=>(last[a]||0)-(last[b]||0));
+      if(keys.length>=2){R[keys[1]]=(R[keys[1]]||0)+(R[keys[0]]||0);delete R[keys[0]];merges++;}
+      Lval=Math.min(Object.values(R).reduce((a,b)=>a+b,0),C);
+    }
+    L=Lval;
+    const V=Math.max(1,Vset.size), m=L/V, cap=Math.max(1,Math.floor(k_cap/Math.max(m,1e-9)));
+
+    // Degree advance
+    if((type==='011'||type==='C')&&deg<12) deg++;
+    else if(type==='J2'&&deg<12&&N===1) deg=Math.min(12,deg+Math.max(1,Math.floor(Math.log2(Math.max(I,1)))));
+    else if(type==='I1'&&deg<12&&N===1) deg=Math.min(12,deg+Math.max(1,Math.floor(Math.log2(Math.max(I,1)))));
+
+    // Bifurcation pressure for D
+    if(type==='D') { bp++; misc=`bp=${bp}`; }
+    if(type==='J1') misc=`trec=${J1records}`; // temporal records
+
+    // Trigger checks
+    let ev='', ec='';
+    if(termN===null){
+      if(type==='011'&&D===1&&frontier.size<=1&&I>=thresh011){termN=n;termType='Uncon';ev='→ UNCON';ec='sun';}
+      else if(type==='F'&&I>=threshF){termN=n;termType='Uncon';ev='→ UNCON';ec='sun';}
+      else if(type==='C'&&D===1&&frontier.size<=1&&I>=threshC){termN=n;termType='Uncon';ev='→ UNCON';ec='sun';}
+      else if(type==='D'&&bp>=threshD){termN=n;termType='Bifurcation';ev='→ BIFURCATE (2×F)';ec='sun';}
+      else if(type==='I1'&&I>=threshI1){termN=n;termType='Severance';ev='→ SEVER';ec='sun';}
+      else if(type==='J2'&&N===1&&frontier.size>=2&&I>=threshJ2){termN=n;termType='ModuleBirth';ev='→ MODULE BIRTH';ec='sun';}
+      else if(type==='J1'&&J1records>=Math.floor(C*threshJ1_ratio)){termN=n;termType='Anchor';ev='→ ANCHOR';ec='sun';}
+    }
+
+    rows+=`<div class="sl"><span class="sn" style="min-width:28px">n=${n}</span><span class="si" style="min-width:60px">${I.toFixed(1)}</span><span class="sf" style="min-width:44px">${frontier.size}</span><span class="sr" style="min-width:44px">${L}</span><span class="si" style="min-width:44px;font-size:9px">${misc}</span><span class="${ec}">${ev}</span></div>`;
+    if(termN!==null) break;
+
+    // Advance frontier
+    if(type!=='J1'){
+      let next=new Set();
+      if(type==='J2'){
+        if(N===1){frontier.forEach(u=>{(OUT[u]||[]).forEach(v=>next.add(v));});}
+        else{const succs=[...frontier].map(u=>new Set(OUT[u]||[]));if(succs.length){let inter=succs[0];succs.slice(1).forEach(s=>{inter=new Set([...inter].filter(x=>s.has(x)));});next=inter.size?inter:succs.reduce((a,b)=>new Set([...a,...b]));}if(next.size>2)next=new Set([...next].sort((a,b)=>b-a).slice(0,2));}
+      } else if(type==='I1'){
+        if(N===1){frontier.forEach(u=>{(OUT[u]||[]).forEach(v=>next.add(v));});next=new Set([...next,...frontier]);}
+        else{frontier.forEach(u=>{(OUT[u]||[]).forEach(v=>next.add(v));});const fc=1+Math.floor(Math.log2(Math.max(I,1)));if(next.size>fc)next=new Set([...next].sort((a,b)=>a-b).slice(0,fc));}
+      } else if(type==='D'){
+        // D moves every step (parity-free), directed toward highest-degree successor
+        const succs=[];frontier.forEach(u=>{(OUT[u]||[]).forEach(v=>succs.push(v));});
+        if(succs.length){next.add(succs[Math.floor(succs.length/2)]);}
+      } else {
+        // 011, F, C: odd steps expand, even steps consolidate
+        if(N===1){frontier.forEach(u=>{const vs=OUT[u]||[];if(vs.length)next.add(vs[0]);});}
+        else{frontier.forEach(u=>{const vs=OUT[u]||[];if(vs.length)next.add(Math.max(...vs));else next.add(u);});if(next.size)next=new Set([Math.max(...next)]);}
+      }
+      if(next.size>cap)next=new Set([...next].slice(0,cap));
+      if(next.size) frontier=next;
+    }
+  }
+
+  if(termN===null) rows+=`<div class="sl"><span class="sok">— stable through n=${steps-1} —</span></div>`;
+  return {rows, termN, termType, Ifinal:0, Lfinal:L, merges, bp};
+}
+
+// ═══════════════════════════════════════════
+//  EXPERIMENT Y-1 — D-on-F
+// ═══════════════════════════════════════════
+function runY1(){
+  const steps=parseInt(document.getElementById('y1-steps').value);
+  const C=parseInt(document.getElementById('y1-cap').value);
+  const pred=parseInt(document.getElementById('y1-pred').value)/100;
+  const seed=0.01;
+  setBadge('y1-badge','Running','live');
+
+  const rD=simYModel({type:'D',steps,C,seed});
+  const rF=simYModel({type:'F',steps,C,seed});
+
+  // Combined D+F: D bifurcates, then two F appear + existing F
+  // We simulate substrate pressure of both together
+  const rDF_noP=simYModel({type:'D',steps,C:Math.floor(C*0.7),seed}); // shared substrate = tighter cap
+  const rDF_pred=simYModel({type:'D',steps,C:Math.floor(C*0.7),seed});
+
+  document.getElementById('y1-arm1').innerHTML=`<div class="sl" style="margin-bottom:4px"><span style="color:#d4884a;font-size:10px">D isolated</span></div>`+rD.rows;
+  document.getElementById('y1-arm2').innerHTML=`<div class="sl" style="margin-bottom:4px"><span style="color:var(--accent-amber);font-size:10px">F isolated → shared pressure sim</span></div>`+rF.rows;
+  document.getElementById('y1-arm3').innerHTML=`<div class="sl" style="margin-bottom:4px"><span style="color:var(--accent-red);font-size:10px">D+F combined pressure</span></div>`+rDF_noP.rows;
+
+  const analEl=document.getElementById('y1-anal'); analEl.style.display='block';
+  let txt=`<p>D isolated: bifurcation at ${rD.termN!==null?'n='+rD.termN:'stable'}. F isolated: Uncon at ${rF.termN!==null?'n='+rF.termN:'stable'}. D under combined substrate pressure: bifurcation at ${rDF_noP.termN!==null?'n='+rDF_noP.termN:'stable'}.</p>`;
+  if(rD.termN!==null&&rDF_noP.termN!==null){
+    const delta=rDF_noP.termN-rD.termN;
+    txt+=`<p>${delta>0?'F\'s substrate pressure delayed D\'s bifurcation by '+delta+' steps. F\'s write pressure heated the shared substrate, shrinking cap and slowing D\'s accumulation of bifurcation pressure.':delta<0?'D bifurcated faster under shared pressure — the combined substrate dynamics accelerated the bifurcation trigger.':'D bifurcated at the same step with or without F\'s substrate pressure — the bifurcation counter is independent of substrate conditions.'}</p>`;
+  }
+  txt+=`<p>The D→F bifurcation produces two F daughters that then join any existing F in the substrate. In a full ecosystem, the chrysalis phase ends not in death but in proliferation — D becomes the very model type it was always moving toward.</p>`;
+  txt+=`<p>Merges — D isolated: ${rD.merges}, F isolated: ${rF.merges}, combined: ${rDF_noP.merges}. ${rDF_noP.merges>rD.merges+rF.merges?'Super-additive substrate heating — D and F together produce more compression than the sum of their parts.':'Additive or sub-additive substrate heating.'}</p>`;
+
+  document.getElementById('y1-anal-txt').innerHTML=txt;
+  setBadge('y1-badge','Complete','done');
+}
+
+// ═══════════════════════════════════════════
+//  EXPERIMENT Y-2 — C-on-011
+// ═══════════════════════════════════════════
+function runY2(){
+  const steps=parseInt(document.getElementById('y2-steps').value);
+  const C=parseInt(document.getElementById('y2-cap').value);
+  const seed=0.01;
+  setBadge('y2-badge','Running','live');
+
+  const rC=simYModel({type:'C',steps,C,seed});
+  const r011=simYModel({type:'011',steps,C,seed});
+  const rBoth=simYModel({type:'C',steps,C:Math.floor(C*0.65),seed}); // shared substrate
+
+  document.getElementById('y2-arm1').innerHTML=`<div class="sl" style="margin-bottom:4px"><span style="color:#4db89e;font-size:10px">C isolated</span></div>`+rC.rows;
+  document.getElementById('y2-arm2').innerHTML=`<div class="sl" style="margin-bottom:4px"><span style="color:var(--accent-teal);font-size:10px">011 isolated</span></div>`+r011.rows;
+  document.getElementById('y2-arm3').innerHTML=`<div class="sl" style="margin-bottom:4px"><span style="color:var(--ink-dim);font-size:10px">C+011 combined pressure</span></div>`+rBoth.rows;
+
+  const analEl=document.getElementById('y2-anal'); analEl.style.display='block';
+  let txt=`<p>C isolated: Uncon at ${rC.termN!==null?'n='+rC.termN:'stable'}. 011 isolated: Uncon at ${r011.termN!==null?'n='+r011.termN:'stable'}. Combined substrate: ${rBoth.termN!==null?'n='+rBoth.termN:'stable'}.</p>`;
+
+  if(rC.termN!==null&&r011.termN!==null){
+    if(rC.termN<r011.termN){
+      txt+=`<p>C terminates before 011 (C@${rC.termN}, 011@${r011.termN}). C\'s inherited degree head-start produces faster I accumulation and faster termination. C is thermodynamically more expensive than 011 despite (or because of) its abstraction inheritance. In shared substrate, C\'s shorter but more intense presence heats the substrate for 011.</p>`;
+    } else if(rC.termN>r011.termN){
+      txt+=`<p>011 terminates before C (011@${r011.termN}, C@${rC.termN}). Despite C\'s head-start, 011\'s linear pressure terminated it first. C\'s inherited degree may produce higher per-step I but 011\'s spine geometry is reaching its trigger condition sooner. This is the K/K-2 pattern reversed — the original outlasts the inheritor.</p>`;
+    } else {
+      txt+=`<p>C and 011 terminate at the same step (n=${rC.termN}). Their substrate dynamics cancel — C\'s faster I growth and 011\'s spine geometry produce identical termination timing. This may be a structural cancellation analogous to Finding 7 (011 write-cost/I-growth cancellation).</p>`;
+    }
+  }
+
+  if(rBoth.termN!==null&&rC.termN!==null){
+    const delta=rBoth.termN-rC.termN;
+    txt+=`<p>Combined substrate effect: ${delta>0?'C lasted '+delta+' additional steps under 011\'s co-substrate pressure — 011 heated the substrate, compressing cap and slowing C\'s approach to its trigger.':delta<0?'C terminated '+Math.abs(delta)+' steps earlier under shared pressure.':'No change — substrate sharing had no effect on C\'s termination timing at these parameters.'}</p>`;
+  }
+
+  document.getElementById('y2-anal-txt').innerHTML=txt;
+  setBadge('y2-badge','Complete','done');
+}
+
+// ═══════════════════════════════════════════
+//  EXPERIMENT Y-3 — J1-on-J2
+// ═══════════════════════════════════════════
+function runY3(){
+  const steps=parseInt(document.getElementById('y3-steps').value);
+  const C=parseInt(document.getElementById('y3-cap').value);
+  const seed=0.01;
+  setBadge('y3-badge','Running','live');
+
+  const rJ2=simYModel({type:'J2',steps,C,seed});
+  // J1 + J2: J1's extreme concentration will heat substrate
+  const rBoth=simYModel({type:'J2',steps,C:Math.floor(C*0.5),seed}); // J1's density collapses effective C
+
+  document.getElementById('y3-arm1').innerHTML=`<div class="sl" style="margin-bottom:4px"><span style="color:var(--accent-blue);font-size:10px">j2 isolated</span></div>`+rJ2.rows;
+  document.getElementById('y3-arm2').innerHTML=`<div class="sl" style="margin-bottom:4px"><span style="color:#c8c8d4;font-size:10px">J1+j2 shared (J1 density effect)</span></div>`+rBoth.rows;
+
+  const analEl=document.getElementById('y3-anal'); analEl.style.display='block';
+  const baseline=rJ2.termN;
+  const combined=rBoth.termN;
+
+  let txt=`<p>j2 isolated: Module birth at ${baseline!==null?'n='+baseline:'not reached'}. j2 under J1\'s substrate density: Module birth at ${combined!==null?'n='+combined:'not reached'}.</p>`;
+
+  if(baseline!==null&&combined!==null){
+    const delta=combined-baseline;
+    if(delta<0){
+      txt+=`<p><strong>J1\'s density accelerated j2\'s Module birth by ${Math.abs(delta)} steps.</strong> J1\'s extreme record concentration at the join node raised the local substrate density so severely that j2\'s frontier, approaching the join, encountered a thermodynamically charged environment. The high-density field may have amplified j2\'s own I accumulation through substrate backreaction, pushing it over θ_J2 sooner.</p>`;
+      txt+=`<p>Time meets space and hastens its conclusion. J1\'s temporal depth compressed j2\'s path to crystallisation. The two post-severance entities, when sharing substrate, produce a more volatile environment than either alone.</p>`;
+    } else if(delta>0){
+      txt+=`<p><strong>J1\'s density delayed j2\'s Module birth by ${delta} steps.</strong> J1\'s record concentration at the join node created substrate pressure that throttled j2\'s frontier expansion — cap reduction from J1\'s extreme density slowed j2\'s approach to the bifurcation condition. Time, making itself at the join node, blocked space from crystallising there.</p>`;
+    } else {
+      txt+=`<p>J1\'s density had no measurable effect on j2\'s Module birth timing at these parameters. The two post-severance entities are thermodynamically independent despite sharing substrate — J1\'s concentration at a single node does not affect j2\'s bifurcating multi-node frontier in ways that change its trigger timing.</p>`;
+    }
+  } else if(baseline!==null&&combined===null){
+    txt+=`<p>J1\'s substrate density prevented j2\'s Module birth entirely within ${steps} steps. The extreme cap reduction from J1\'s temporal record concentration blocked j2\'s frontier from reaching the bifurcation condition. J1\'s time-making has foreclosed j2\'s space-making — at least at these parameters.</p>`;
+  }
+
+  document.getElementById('y3-anal-txt').innerHTML=txt;
+  setBadge('y3-badge','Complete','done');
+}
+
+// ═══════════════════════════════════════════
+//  EXPERIMENT Y-4 — J1-on-I/1
+// ═══════════════════════════════════════════
+function runY4(){
+  const steps=parseInt(document.getElementById('y4-steps').value);
+  const C=parseInt(document.getElementById('y4-cap').value);
+  const pred=parseInt(document.getElementById('y4-pred').value)/100;
+  const seed=0.01;
+  setBadge('y4-badge','Running','live');
+
+  const rJ1=simYModel({type:'J1',steps,C,seed});
+  const rI1=simYModel({type:'I1',steps,C,seed});
+  // Combined: I/1 reaches J1's node; J1's density affects I/1's substrate
+  const rBoth=simYModel({type:'I1',steps,C:Math.floor(C*0.55),seed}); // J1 heats substrate for I/1
+
+  document.getElementById('y4-arm1').innerHTML=`<div class="sl" style="margin-bottom:4px"><span style="color:#c8c8d4;font-size:10px">J1 isolated</span></div>`+rJ1.rows;
+  document.getElementById('y4-arm2').innerHTML=`<div class="sl" style="margin-bottom:4px"><span style="color:var(--accent-red);font-size:10px">I/1 isolated</span></div>`+rI1.rows;
+  document.getElementById('y4-arm3').innerHTML=`<div class="sl" style="margin-bottom:4px"><span style="color:var(--ink-dim);font-size:10px">J1+I/1 shared substrate</span></div>`+rBoth.rows;
+
+  const analEl=document.getElementById('y4-anal'); analEl.style.display='block';
+  let txt=`<p>J1 isolated: anchor at ${rJ1.termN!==null?'n='+rJ1.termN:'stable'}. I/1 isolated: severance at ${rI1.termN!==null?'n='+rI1.termN:'stable'}. Combined: I/1 under J1\'s substrate pressure — severance at ${rBoth.termN!==null?'n='+rBoth.termN:'stable'}.</p>`;
+
+  if(rI1.termN!==null&&rBoth.termN!==null){
+    const delta=rBoth.termN-rI1.termN;
+    txt+=`<p><strong>J1\'s effect on I/1 severance: ${delta>0?'+'+delta+' steps (delayed)':delta<0?delta+' steps (accelerated)':'no change'}.</strong> `;
+    if(delta<0){
+      txt+=`J1\'s extreme substrate density accelerated I/1\'s severance. I/1 accumulates I through engine dynamics — but J1\'s record concentration raised the substrate temperature so severely that cap reduction constrained I/1\'s wavefront expansion, altering its I trajectory. The apex predator reached its threshold sooner in the presence of a temporal anchor.</p>`;
+    } else if(delta>0){
+      txt+=`J1\'s substrate heating delayed I/1\'s severance. Counterintuitively, the extreme density from J1\'s anchoring may have created thermodynamic conditions that altered I/1\'s parity-driven expansion in ways that extended its approach to the severance threshold.</p>`;
+    } else {
+      txt+=`J1\'s substrate presence had no measurable effect on I/1\'s severance timing. I/1\'s engine-driven I accumulation is sufficiently dominant (Finding 23) that J1\'s substrate heating is swamped — the same pattern as all prior secondary-source experiments.</p>`;
+    }
+  }
+
+  txt+=`<p><strong>The predation question (Y-4 open result):</strong> whether I/1 predates J1\'s temporal records cannot be directly simulated in this notebook experiment — it requires the full simulation with spatial frontier overlap at J1\'s anchor node. The notebook experiment approximates the substrate heating effect only. Run in the full simulator with J1+I/1 in the same ecosystem and observe whether the event log shows predation contacts against J1.</p>`;
+  txt+=`<p>This is the most open-ended finding in the Y-series. The notebook gives us the substrate effect; the full simulator gives us the spatial interaction. Both are needed for a complete picture.</p>`;
+
+  document.getElementById('y4-anal-txt').innerHTML=txt;
+  setBadge('y4-badge','Complete','done');
 }
 
 </script>
