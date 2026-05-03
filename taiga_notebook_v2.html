@@ -2738,7 +2738,7 @@
 
 <!-- ══ Z. Γ ROTATION ENGINE ══ -->
 <div class="section-head" style="color:var(--accent-gold)">Z — Γ Rotation Engine</div>
-<div class="section-sub" style="color:var(--accent-gold)">Primary source implementation · variance characterisation complete · Lambda structure measurement pending</div>
+<div class="section-sub" style="color:var(--accent-gold)">Primary source implementation · variance characterisation complete · Lambda structure measurement complete</div>
 
 <div class="exp" style="border-left-color:var(--accent-gold);opacity:0.8">
   <div class="exp-hdr">
@@ -2755,8 +2755,8 @@
     <div class="canon-ref" style="border-left-color:var(--accent-gold)">PHASE 2 — COMPLETE (May 2026): Baseline engine comparison resolved. The Γ engine produces structurally different runs: longer lifespans (mean 245 vs 51 steps), higher merge counts, stochastic j2 birth at n=5 to n=11 (all odd). See Findings 49–64.</div>
     <div class="canon-ref" style="border-left-color:var(--accent-gold)">PHASE 3 — COMPLETE (May 2026): 19 runs documented. Key findings: j2 parity law confirmed 19/19. Primary attractor at n≈224, |Γ|=1.683 (R3, R10, R11). Secondary attractor at |Γ|=1.443 (R18, R19). J1/β separation clean above |Γ|=2.020. j2@5 is β precursor. Phase boundary at |Γ|≈2.020. See Findings 65–70.</div>
 
-    <div class="pending">PHASE 4 (PENDING): Three-condition transition logic — implement spatial triggers (Δ⁻, Δ⁺, ∂_n) from Image 8 as alternative to scalar θ thresholds. Compare model lifespans.</div>
-    <div class="pending">PHASE 5 (PENDING): Lambda structure measurement — track triangular area swept by each Γ vector over each three-step group. Record area destroyed at each merge event. Geometric information loss metric.</div>
+    <div class="pending">PHASE 4 (COMPLETE · May 2026): Three-condition spatial transition logic implemented with full test suite (122/122 passing). Key findings: n≈224 attractor is a scalar artifact (dissolves under spatial triggers). Two compounding suppression effects isolated — developmental transition lockout (Effect 1, structural) and early spatial severance suppressing ModuleBirth (Effect 2, mapping artifact). ModuleBirth and J2Spawn confirmed as distinct events with different parity constraints. Hybrid mode (spatial transitions + scalar severance) implemented. See Findings 71–75.</div>
+    <div class="pending">PHASE 5 (COMPLETE · May 2026): LambdaTracker implemented (3-element circular buffer per model, shoelace formula). 140/140 tests passing. Key findings: λ_R / λ_scalar = 1.0000 exactly in all 6 runs — the scalar proxy was already the geometric computation (Finding 76). β runs show lower mean λ_R/merge than J1 runs (0.151 vs 0.342) — duration confound, not J-outcome (Finding 77). Attractor basin occupies distinct λ_R tier (Finding 78). Late merges show higher mean λ_R in long runs, weakly confirming |Γ| growth (Finding 79). 7% of merge events are geometrically lossless — collinear Γ vectors (Finding 80). Phase 5 complete. Γ engine implementation programme complete. See Findings 76–80.</div>
 
     <p class="exp-note" style="margin-top:16px"><strong>19-Run Summary Table</strong></p>
     <div style="font-family:var(--mono);font-size:11px;line-height:1.9;color:var(--ink-dim);background:var(--bg-mid);padding:12px 16px;border-radius:2px;overflow-x:auto;white-space:nowrap">
