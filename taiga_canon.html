@@ -1721,9 +1721,11 @@
   </div>
 
   <div class="finding">
-    <span class="def-tag">Finding 66 — j2 Parity Law Confirmed: All 19 Runs, All Odd Steps · May 2026</span>
-    <p>Source: Γ engine runs R1–R20 (R8 lost). j2 Module birth fires on odd steps in every documented run. Observed steps: n=5 (7 runs), n=7 (8 runs), n=9 (2 runs), n=11 (4 runs). n=3 has never been observed. One possible anomaly (R7, possible n=8) remains unconfirmed pending re-run. The parity constraint on j2 birth is not a property of the linearised engine's scalar trigger — it appears to be a structural property of the Γ rotation engine's geometric transition logic.</p>
-    <p><strong>Canon status (Confirmed — 19/19):</strong> j2 birth is exclusively odd-step across all documented Γ engine runs. n=3 is the open lower bound; n=11 is the observed upper bound. The theoretical maximum (all-minimum γ sequence) may extend the range further — this remains speculative.</p>
+    <span class="def-tag">Finding 66 — j2 Parity Law Confirmed: All Documented Runs, All Odd Steps · May 2026 · UPDATED</span>
+    <p>Source: Γ engine runs R1–R20 (R8 lost), plus post-Phase-5 simulator session (May 2026). j2 Module birth fires on odd steps in every documented run. Observed steps: n=5 (7 runs), n=7 (8 runs), n=9 (2 runs), n=11 (4 runs), n=15 (1 run, post-Phase-5 session). n=3 has never been observed. One possible anomaly (R7, possible n=8) remains unconfirmed pending re-run. The parity constraint on j2 birth is not a property of the linearised engine's scalar trigger — it appears to be a structural property of the Γ rotation engine's geometric transition logic.</p>
+    <p><strong>Canon status (Confirmed — updated upper bound):</strong> j2 birth is exclusively odd-step across all documented Γ engine runs. n=3 is the open lower bound. n=15 is the new observed upper bound, replacing the previous n=11. The theoretical maximum (all-minimum γ sequence) may extend the range further — this remains speculative.</p>
+
+    <p><strong>Open cosmetic bug (non-canon):</strong> Post-Phase-5 Γ engine run (n=373, merges=583) shows λ destroyed = 0.000 in the HUD while the run log panel correctly reports λ_R total = 47.439. Finding 76 confirms these values are computationally identical; this is a display formatting issue in the HUD readout only. The underlying data is correct. One-line fix for Claude Code — HUD is not reading from the same LambdaTracker reference as the run log panel.
   </div>
 
   <div class="finding">
